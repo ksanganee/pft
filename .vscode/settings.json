@@ -1,0 +1,26 @@
+{
+	"latex-workshop.latex.recipes": [
+		{
+			"name": "latexmk pft",
+			"tools": [
+				"latexmk"
+			]
+		}
+	],
+	"latex-workshop.latex.tools": [
+		{
+			"name": "latexmk",
+			"command": "latexmk",
+			"args": [
+				"-interaction=nonstopmode",
+				"-shell-escape",
+				"-synctex=1",
+				"-file-line-error",
+				"-pdf",
+				"-outdir=%OUTDIR%",
+				"%DOC%"
+			],
+			"env": {}
+		},
+	]
+}
