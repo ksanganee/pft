@@ -12,6 +12,9 @@
 			"name": "latexmk",
 			"command": "latexmk",
 			"args": [
+				"-f",
+				"-bibtex",
+				"-pdflatex",
 				"-interaction=nonstopmode",
 				"-shell-escape",
 				"-synctex=1",
