@@ -1,4 +1,14 @@
-\section{Progress}
-\label{sec:progress}
+\section{Progress} \label{sec:progress}
 
-Summarise the progress you have made so far. You can cross-reference other sections (\Cref{sec:background}).
+As outlined in the project specification, the progress made so far can be divided into two sections. The first section is research which has been on the distinction between financial advice and guidance, the technologies to use for development and the money management strategies. The second section is the development of a proof of concept web application using the waterfall methodology to demonstrate the feasibility of the project.
+
+\subsection{Research}
+\subsubsection{Financial Advice vs. Financial Guidance}
+
+As outlined in the risks section of the project specification, a major factor to consider is distinguishing between financial advice and financial guidance, therefore this was prioritised during the early stages of research.
+
+As defined in this report \cite{FCAReport} from the Financial Conduct Authority (FCA) and HM Treasury, financial advice is defined as ``a service which recommends a specific course of action based on consumers' individual circumstances and goals''. This is in contrast to financial guidance, which is defined as ``provides information and/or options to narrow down consumers' choices, without making explicit recommendation''. These definitions are extremely reliable as the report is part of the Financial Advice Working Group's Review (FAWG), whose sole purpose is to demystify the differences and is what is considered in court.
+
+It is important to consider this distinction when developing the application, as in the UK, it is illegal to provide financial advice on regulated investments without being vetted by the FCA's fact-find process \cite{FinancialAdviceLegalities}. In addition, the repercussions of providing financial advice include the potential that if user were to lose money, they can sue the software for damages which is a major risk to consider \cite{SueBroker}. 
+
+In particular, as the application will be providing information specific to each user, as a result of using Plaid \cite{Plaid}, so emphasis must be made that the strategies are not based on this, but rather are just general tools to help the user manage their money more effectively. An example of implementation that follows is in the budgeting strategy. The user will be able to see their recent transactions, but they must opt-in to begin budgeting, and then set their own budget. The application will recommend the most effective strategy based on research later on in the project, but this will never be pushed onto the user.
