@@ -34,3 +34,46 @@ The research at this stage is not final and other options are still being consid
 
 \subsection{Development}
 The development of the proof of concept web application is using the waterfall methodology - a sequential approach to software development. This is enabled as the requirements are well defined and there is a clear end goal. So far, two separate concepts have been developed. The first is the basic authentication system using Next.js, TailwindCSS and Pocketbase. It is currently working and passing all the unit tests that have been written. The second is the Plaid integration, where the quickstart project has been set up and is currently working with some slight adjustments. The next step is to combine the two concepts and then move on to repeated strategy implementation.
+
+The below figures are screenshots of the Plaid proof of concept. They simulate the users actions after landing on the first page. Firstly they open the link pop-up; then, they choose which bank to connect to; after that, they log into their institution securely; then, they select which accounts to sync; and finally, they can view centralised information about them all, including recent transactions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.53]{landing_page.png}
+	\vspace{-0.8cm}
+    \caption{The landing page of the Plaid PoC}
+	\label{fig:landing_page}
+\end{figure}
+    
+\begin{figure}[H]
+	\centering
+    \includegraphics[scale=0.53]{bank_search.png}
+	\vspace{-0.8cm}
+    \caption{Simulating a user choosing which bank to connect to}
+    \label{fig:bank_search}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[scale=0.53]{bank_login.png}
+	\vspace{-0.8cm}
+    \caption{Simulating a user choosing logging into their bank}
+    \label{fig:bank_login}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[scale=0.53]{account_choice.png}
+	\vspace{-0.8cm}
+    \caption{Simulating an authenticated user choosing which accounts to link}
+    \label{fig:account_choice}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[scale=0.53]{transactions.png}
+	\vspace{-0.8cm}
+    \caption{Simulating an authenticated user viewing their transactions}
+    \label{fig:transactions}
+\end{figure}
+
