@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useState, useEffect } from "react";
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function Login() {
 	let router = useRouter();
@@ -19,14 +19,14 @@ export default function Login() {
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		await client.collections("users")
-			.authWithPassword(email, password)
+		await client.users
+			.authViaEmail(email, password)
 			.then((_) => {
 				router.push("/dashboard");
 			})
-			.catch((err) => {
-				console.log(err);
+			.catch((_) => {
 				setQuery("");
+				setPassword("");
 				setError("Login failed");
 			});
 	};
@@ -53,6 +53,7 @@ export default function Login() {
 					className="rounded-lg border-gray-300 border-2 p-1.5 mb-2"
 					placeholder="Password"
 					onChange={(e) => setPassword(e.target.value)}
+					value={password}
 				/>
 				{error && (
 					<p className="text-red-500 bg-red-200 p-2 rounded-lg mb-2 text-center">
@@ -63,7 +64,9 @@ export default function Login() {
 					Login
 				</button>
 				<div className="flex items-center justify-center">
-					<Link className="p-2" href="/signup">Don't have an account?</Link>
+					<Link className="p-2" href="/signup">
+						Don't have an account?
+					</Link>
 				</div>
 			</form>
 		</div>

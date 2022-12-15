@@ -1,9 +1,9 @@
 import PocketBase from "pocketbase";
 import { useRouter } from "next/router";
 
-export default function SignoutButton() {
+export default function LogoutButton() {
 	const client = new PocketBase("http://127.0.0.1:8090");
-	
+
 	let router = useRouter();
 
 	const handleSignout = async (e) => {
@@ -11,7 +11,7 @@ export default function SignoutButton() {
 		await client.authStore.clear();
 		router.push({
 			pathname: "/login",
-			query: { name: "You have successfully signed out" },
+			query: { name: "You have signed out" },
 		});
 	};
 
