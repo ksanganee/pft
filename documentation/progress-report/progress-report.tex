@@ -1,4 +1,6 @@
-\documentclass[a4paper,fleqn,twoside,12pt]{article}
+\documentclass[a4paper,fleqn,12pt]{article}
+
+\setlength{\headheight}{15pt}
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -15,10 +17,9 @@
 \makeatletter
 \fancypagestyle{plain}{
 	\fancyhf{}
-	\fancyhead[LE]{\thepage}
-	\fancyhead[RE]{\textit{\@author}}
-	\fancyhead[RO]{\thepage}
-	\fancyhead[LO]{\textit{\@title}}
+	\fancyhead[R]{\textit{\@assignment}}
+    \fancyhead[L]{\textit{\@author}}
+    \fancyfoot[C]{\thepage}
 }
 \makeatother
 
@@ -34,7 +35,12 @@
 \input{progress.tex}
 \input{project-management.tex}
 
-\bibliographystyle{../common/plainnat}
+\bibliographystyle{unsrtnat}
 \bibliography{../common/bibliography}
+
+% \clearpage
+\appendix
+\section{Project Specification} \label{appendix:project-specification}
+\includepdf[pages=-]{../specification/specification.pdf}
 
 \end{document}
