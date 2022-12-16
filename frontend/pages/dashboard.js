@@ -11,6 +11,15 @@ export default function Dashboard() {
 	const [userModel, setUserModel] = useState(null);
 	const [token, setToken] = useState("");
 
+	const handleLink = async (e) => {
+		e.preventDefault();
+		await client.records.create("secret", {
+			user: userModel.id,
+			token: "test",
+		});
+		setToken("test");
+	};
+
 	const getToken = async (model) => {
 		await client.records
 			.getList("secret", 1, 1, {
@@ -21,7 +30,7 @@ export default function Dashboard() {
 			})
 			.catch((_) => {
 				console.log("Not linked account with plaid");
-				router.push("/error");
+				// router.push("/error");
 			});
 	};
 
@@ -41,7 +50,16 @@ export default function Dashboard() {
 		<div className="flex items-center justify-center h-screen">
 			<div className="flex-col text-center space-y-2">
 				{userModel && <p>Signed in as {userModel.email}</p>}
-				<p>Token: {token}</p>
+				{token ? (
+					<p>Token: {token}</p>
+				) : (
+					<button
+						className="rounded-lg bg-[#fb923c] p-1.5 right-1 text-white"
+						onClick={handleLink}
+					>
+						Link account with Plaid
+					</button>
+				)}
 				<LogoutButton />
 			</div>
 		</div>
