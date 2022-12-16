@@ -16,11 +16,13 @@ export default function LogoutButton() {
 	};
 
 	return (
-		<button
-			className="rounded-lg bg-[#fb923c] p-1.5 right-1 text-white"
-			onClick={handleSignout}
-		>
-			Sign out
-		</button>
+		<div>
+			<button
+				className="rounded-lg bg-[#fb923c] p-1.5 right-1 text-white"
+				onClick={handleSignout}
+			>
+				Sign out
+			</button>
+		</div>
 	);
 }
