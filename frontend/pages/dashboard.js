@@ -2,18 +2,20 @@ import PocketBase from "pocketbase";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import LogoutButton from "../components/LogoutButton";
+import Centered from "../layouts/Centred";
+import VStack from "../layouts/VStack";
 
-export default function Dashboard() {
+export default function dashboard() {
 	let router = useRouter();
 
-	const client = new PocketBase("http://127.0.0.1:8090");
+	const pb = new PocketBase("http://127.0.0.1:8090");
 
 	const [userModel, setUserModel] = useState(null);
 	const [token, setToken] = useState("");
 
 	const handleLink = async (e) => {
 		e.preventDefault();
-		await client.records.create("secret", {
+		await pb.records.create("secret", {
 			user: userModel.id,
 			token: "test",
 		});
@@ -21,9 +23,9 @@ export default function Dashboard() {
 	};
 
 	const getToken = async (model) => {
-		await client.records
+		await pb.records
 			.getList("secret", 1, 1, {
-				filter: 'user = "' + model.id + '"',
+				filter: `user = "${model.id}"`,
 			})
 			.then((res) => {
 				setToken(res.items[0].token);
@@ -35,33 +37,33 @@ export default function Dashboard() {
 	};
 
 	useEffect(() => {
-		if (client.authStore.model == null) {
+		if (pb.authStore.model == null) {
 			router.push({
 				pathname: "/login",
 				query: { name: "You must login first" },
 			});
 		} else {
-			setUserModel(client.authStore.model);
-			getToken(client.authStore.model);
+			setUserModel(pb.authStore.model);
+			getToken(pb.authStore.model);
 		}
 	}, []);
 
 	return (
-		<div className="flex items-center justify-center h-screen">
-			<div className="flex-col text-center space-y-2">
+		<Centered>
+			<VStack>
 				{userModel && <p>Signed in as {userModel.email}</p>}
 				{token ? (
 					<p>Token: {token}</p>
 				) : (
 					<button
-						className="rounded-lg bg-[#fb923c] p-1.5 right-1 text-white"
+						className="rounded bg-[#fb923c] p-1.5 right-1 text-white"
 						onClick={handleLink}
 					>
 						Link account with Plaid
 					</button>
 				)}
 				<LogoutButton />
-			</div>
-		</div>
+			</VStack>
+		</Centered>
 	);
 }
