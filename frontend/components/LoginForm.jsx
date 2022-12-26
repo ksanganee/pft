@@ -66,7 +66,7 @@ export default function LoginForm() {
 				</button>
 				<div className="flex items-center justify-center">
 					<Link className="p-2" href="/signup">
-						Don't have an account?
+						Don &apos; t have an account?
 					</Link>
 				</div>
 			</form>
