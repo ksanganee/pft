@@ -20,11 +20,18 @@ export default function SignupForm() {
 				password: password,
 				passwordConfirm: password,
 			})
-			.then((_) => {
-				router.push({
-					pathname: "/login",
-					query: { name: "Successfully created" },
-				});
+			.then(async (_) => {
+				await pb.users
+					.authViaEmail(email, password)
+					.then((_) => {
+						router.push("/dashboard");
+					})
+					.catch((_) => {
+						router.push({
+							pathname: "/login",
+							query: { name: "Successfully created" },
+						});
+					});
 			})
 			.catch((_) => {
 				setPassword("");
@@ -33,33 +40,31 @@ export default function SignupForm() {
 	};
 
 	return (
-		<Centred>
-			<form
-				className="flex flex-col min-w-max formFixedWidth"
-				onSubmit={handleSignUp}
-			>
-				<input
-					type="email"
-					className="rounded border-gray-300 border-2 p-1.5 mb-2"
-					placeholder="Email"
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<input
-					type="password"
-					className="rounded border-gray-300 border-2 p-1.5 mb-2"
-					placeholder="Password"
-					onChange={(e) => setPassword(e.target.value)}
-					value={password}
-				/>
-				{error && (
-					<p className="text-red-500 bg-red-200 p-2 rounded mb-2 text-center">
-						{error}
-					</p>
-				)}
-				<button className="rounded bg-[#fb923c] p-1.5 right-1 text-white">
-					Sign up
-				</button>
-			</form>
-		</Centred>
+		<form
+			className="flex flex-col min-w-max formFixedWidth"
+			onSubmit={handleSignUp}
+		>
+			<input
+				type="email"
+				className="rounded border-gray-300 border-2 p-1.5 mb-2"
+				placeholder="Email"
+				onChange={(e) => setEmail(e.target.value)}
+			/>
+			<input
+				type="password"
+				className="rounded border-gray-300 border-2 p-1.5 mb-2"
+				placeholder="Password"
+				onChange={(e) => setPassword(e.target.value)}
+				value={password}
+			/>
+			{error && (
+				<p className="text-red-500 bg-red-200 p-2 rounded mb-2 text-center">
+					{error}
+				</p>
+			)}
+			<button className="rounded bg-[#fb923c] p-1.5 right-1 text-white">
+				Sign up
+			</button>
+		</form>
 	);
 }

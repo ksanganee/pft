@@ -1,5 +1,10 @@
 import LoginForm from "../components/LoginForm";
+import Centred from "../layouts/Centred";
 
-export default function login() {
-	return <LoginForm />;
+export default function LoginPageHandler() {
+	return (
+		<Centred>
+			<LoginForm />
+		</Centred>
+	)
 }
