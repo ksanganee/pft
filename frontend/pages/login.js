@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
+import { useEffect } from "react";
 import LoginForm from "../components/LoginForm";
 import Centred from "../layouts/Centred";
-import { useEffect } from "react";
 
 export default function LoginPageHandler() {
 	let router = useRouter();

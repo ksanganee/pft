@@ -11,6 +11,7 @@
   "dependencies": {
     "eslint": "^8.27.0",
     "eslint-config-next": "13.0.2",
+    "moment": "^2.29.4",
     "next": "13.0.2",
     "plaid": "^12.2.0",
     "pocketbase": "^0.7.4",

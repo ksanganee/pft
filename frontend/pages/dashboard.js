@@ -1,10 +1,11 @@
-import PocketBase from "pocketbase";
 import { useRouter } from "next/router";
+import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
-import Centered from "../layouts/Centred";
-import VStack from "../layouts/VStack";
 import LogoutButton from "../components/LogoutButton";
 import PlaidLinkButtons from "../components/PlaidLinkButtons";
+import TransactionsList from "../components/TransactionsList";
+import Centered from "../layouts/Centred";
+import VStack from "../layouts/VStack";
 
 export default function Dashboard() {
 	let router = useRouter();
@@ -21,14 +22,15 @@ export default function Dashboard() {
 			});
 		} else {
 			setUserModel(pb.authStore.model);
-		}	
+		}
 	}, []);
 
 	return (
 		<Centered>
 			<VStack>
 				{userModel && <p>Signed in as {userModel.email}</p>}
-				<PlaidLinkButtons userModel={userModel}/>
+				<PlaidLinkButtons userModel={userModel} />
+				<TransactionsList userModel={userModel} />
 				<LogoutButton />
 			</VStack>
 		</Centered>
