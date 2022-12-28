@@ -17,19 +17,23 @@ export default function Dashboard(props) {
 			});
 	};
 
-	const linkSuccessCallback = useCallback(async (publicToken, _) => {
-		await fetch("/api/send_public_token", {
-			method: "POST",
-			body: JSON.stringify({
-				publicToken,
-				userId: props.userModel.id,
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data);
-			});
-	}, [props.userModel]);
+	const linkSuccessCallback = useCallback(
+		async (publicToken, _) => {
+			await fetch("/api/send_public_token", {
+				method: "POST",
+				body: JSON.stringify({
+					publicToken,
+					userId: props.userModel.id,
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((err) => console.log(err));
+		},
+		[props.userModel]
+	);
 
 	const linkErrorCallback = useCallback((_) => {
 		router.push("/error");

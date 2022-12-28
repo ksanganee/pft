@@ -42,6 +42,11 @@ export default function LoginForm() {
 					{query}
 				</p>
 			)}
+			{error && (
+				<p className="text-red-500 bg-red-200 p-2 rounded mb-2 text-center">
+					{error}
+				</p>
+			)}
 			<input
 				type="email"
 				className="rounded border-gray-300 border-2 p-1.5 mb-2"
@@ -55,11 +60,6 @@ export default function LoginForm() {
 				onChange={(e) => setPassword(e.target.value)}
 				value={password}
 			/>
-			{error && (
-				<p className="text-red-500 bg-red-200 p-2 rounded mb-2 text-center">
-					{error}
-				</p>
-			)}
 			<button className="rounded bg-[#fb923c] p-1.5 right-1 text-white">
 				Login
 			</button>
