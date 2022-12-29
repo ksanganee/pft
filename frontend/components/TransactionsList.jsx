@@ -1,20 +1,37 @@
-import Centred from "../layouts/Centred";
-import VStack from "../layouts/VStack";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import PocketBase from "pocketbase";
+import { useState, useEffect } from "react";
 
-export default function TransactionsList(props) {
+export default function TransactionsList() {
+
+	let router = useRouter();
+	const pb = new PocketBase("http://127.0.0.1:8090");
+	const [userModel, setUserModel] = useState(null);
+	useEffect(() => {
+		if (pb.authStore.model == null) {
+			router.push({
+				pathname: "/login",
+				query: { name: "You must login first" },
+			});
+		} else {
+			setUserModel(pb.authStore.model);
+		}
+	}, []);
+	
+
 	const [transactions, setTransactions] = useState([]);
 
 	const getTransactions = async () => {
 		await fetch("/api/get_transactions", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
+				userId: userModel.id,
 			}),
 		})
 			.then((res) => res.json())
 			.then((data) => {
 				setTransactions(data.transactions);
+				console.log(data.transactions)
 			});
 	};
 
