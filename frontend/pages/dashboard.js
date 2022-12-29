@@ -6,6 +6,8 @@ import PlaidLinkButtons from "../components/PlaidLinkButtons";
 import TransactionsList from "../components/TransactionsList";
 import Centered from "../layouts/Centred";
 import VStack from "../layouts/VStack";
+import TabViewer from "../components/TabViewer";
+import VisitLink from "../components/VisitLink";
 
 export default function Dashboard() {
 	let router = useRouter();
@@ -28,10 +30,12 @@ export default function Dashboard() {
 	return (
 		<Centered>
 			<VStack>
-				{userModel && <p>Signed in as {userModel.email}</p>}
-				<PlaidLinkButtons userModel={userModel} />
+				{/* {userModel && <p>Signed in as {userModel.email}</p>} */}
+				{/* <VisitLink destination="/dashboard" text="Click" /> */}
+				<TabViewer />
+				{/* <PlaidLinkButtons userModel={userModel} />
 				<TransactionsList userModel={userModel} />
-				<LogoutButton />
+				<LogoutButton /> */}
 			</VStack>
 		</Centered>
 	);
