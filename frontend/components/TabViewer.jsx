@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TransactionsList from "./TransactionsList";
+import AccountsDropdown from "./AccountsDropdown";
 
-export default function TabViewer() {
+export default function TabViewer(props) {
 	const [tab, setTab] = useState(1);
+	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	return (
 		<>
-			<div className="flex flex-wrap text-gray-500">
+			<div className="flex text-gray-500 justify-center">
 				<div className="mr-2">
 					<div
 						onClick={() => setTab(1)}
@@ -14,7 +16,7 @@ export default function TabViewer() {
 							tab == 1
 								? "text-[#fb923c] border-[#fb923c]"
 								: "border-transparent hover:border-gray-300"
-						} transition duration-200 ease-in-out inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer `}
+						} inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer`}
 					>
 						Transactions
 					</div>
@@ -26,7 +28,7 @@ export default function TabViewer() {
 							tab == 2
 								? "text-[#fb923c] border-[#fb923c]"
 								: "border-transparent hover:border-gray-300"
-						} transition duration-200 ease-in-out inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer `}
+						} inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer `}
 					>
 						Budgets
 					</div>
@@ -44,38 +46,24 @@ export default function TabViewer() {
 					</div>
 				</div>
 				<div className="mr-2">
-					<div
-						onClick={() => setTab(4)}
-						className={`${
-							tab == 4
-								? "text-[#fb923c] border-[#fb923c]"
-								: "border-transparent hover:border-gray-300"
-						} transition duration-200 ease-in-out inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer `}
-					>
-						Accounts
-					</div>
+					<AccountsDropdown
+						userModel={props.userModel}
+						activeAccounts={activeAccounts}
+						setActiveAccounts={setActiveAccounts}
+					/>
 				</div>
 			</div>
-			<div id="" className="h-96 mt-6">
-				{tab === 1 && <TransactionsList />}
+			<div className="mt-6 mb-3 flex justify-center h-[70vh] overflow-auto bg-white rounded shadow-ring max-w-[70vw]">
+				{tab === 1 && (
+					<TransactionsList
+						userModel={props.userModel}
+						activeAccounts={activeAccounts}
+					/>
+				)}
 				{tab === 2 && <div>Tab 2</div>}
 				{tab === 3 && <div>Tab 3</div>}
-				{tab === 4 && <div>Tab 4</div>}
 			</div>
+			{/* </div> */}
 		</>
-
-		// <>
-		// 	<div className="flex justify-evenly mb-1">
-		// 		<div onClick={() => setTab(1)}>Tab 1</div>
-		// 		<div onClick={() => setTab(2)}>Tab 2</div>
-		// 		<div onClick={() => setTab(3)}>Tab 3</div>
-		// 	</div>
-		// 	<hr className="w-80"/>
-		// 	<div className="mt-1">
-		// 		{tab === 1 && <div>Tab 1</div>}
-		// 		{tab === 2 && <div>Tab 2</div>}
-		// 		{tab === 3 && <div>Tab 3</div>}
-		// 	</div>
-		// </>
 	);
 }

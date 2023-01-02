@@ -9,6 +9,8 @@
 	box-sizing: border-box;
 	font-family: "Rubik", sans-serif;
 	user-select: none;
+	transition-duration: 200ms;
+	transition-timing-function: ease-in-out;
 }
 
 #currentTesting {
@@ -25,4 +27,12 @@ body {
 	width: 15rem;
 	min-width: 15rem;
 	max-width: 15rem;
+}
+
+input[type="checkbox"] {
+	accent-color: #fb923c;
+}
+
+.shadow-ring {
+	/* box-shadow: 0 0 10px #ccc; */
 }

@@ -31,19 +31,25 @@ export default async function GetTransactionsHandler(req, res) {
 					})
 					.then(async (response) => {
 						response.data.added.forEach((transaction) => {
-							transactions.push({
-								account_id: transaction.account_id,
-								amount: transaction.amount,
-								category: transaction.category[0],
-								date: transaction.date,
-								iso_currency_code:
-									transaction.iso_currency_code,
-								merchant_name: transaction.merchant_name,
-								name: transaction.name,
-							});
+							if (body.activeAccounts.includes(transaction.account_id)) {
+								transactions.push({
+									account_id: transaction.account_id,
+									amount: transaction.amount,
+									category: transaction.category[0],
+									date: transaction.date,
+									iso_currency_code:
+										transaction.iso_currency_code,
+									merchant_name: transaction.merchant_name,
+									name: transaction.name,
+								});
+							}
 						});
 					});
 			}
+			// Sort transactions by date
+			transactions.sort((a, b) => {
+				return new Date(b.date) - new Date(a.date);
+			});
 			res.status(200).json({ transactions });
 		});
 }
