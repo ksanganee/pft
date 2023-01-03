@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import TransactionsList from "./TransactionsList";
+import { useState } from "react";
 import AccountsDropdown from "./AccountsDropdown";
+import TransactionsList from "./TransactionsList";
 
 export default function TabViewer(props) {
 	const [tab, setTab] = useState(1);
@@ -63,7 +63,6 @@ export default function TabViewer(props) {
 				{tab === 2 && <div>Tab 2</div>}
 				{tab === 3 && <div>Tab 3</div>}
 			</div>
-			{/* </div> */}
 		</>
 	);
 }

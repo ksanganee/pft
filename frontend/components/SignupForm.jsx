@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useState } from "react";
-import Centred from "../layouts/Centred";
 
 export default function SignupForm() {
 	let router = useRouter();

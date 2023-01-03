@@ -1,14 +1,9 @@
 import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
-import LogoutButton from "../components/LogoutButton";
-import PlaidLinkButtons from "../components/PlaidLinkButtons";
-import TransactionsList from "../components/TransactionsList";
+import TabViewer from "../components/TabViewer";
 import Centered from "../layouts/Centred";
 import VStack from "../layouts/VStack";
-import TabViewer from "../components/TabViewer";
-import VisitLink from "../components/VisitLink";
-import AccountsDropdown from "../components/AccountsDropdown";
 
 export default function Dashboard() {
 	let router = useRouter();
@@ -28,17 +23,15 @@ export default function Dashboard() {
 		}
 	}, []);
 
-	const [activeAccounts, setActiveAccounts] = useState([]);
-
 	return (
-		<Centered>
-			<VStack>
-				{/* {userModel && <p>Signed in as {userModel.email}</p>} */}
-				{/* <VisitLink destination="/dashboard" text="Click" /> */}
-				{userModel && <TabViewer userModel={userModel}/>}
-				{/* <PlaidLinkButtons userModel={userModel} /> */}
-				{/* <TransactionsList userModel={userModel} /> */}
-			</VStack>
-		</Centered>
+		<>
+			{userModel && (
+				<Centered>
+					<VStack>
+						<TabViewer userModel={userModel} />
+					</VStack>
+				</Centered>
+			)}
+		</>
 	);
 }

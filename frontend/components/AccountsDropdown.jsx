@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PlaidLinkButtons from "./PlaidLinkButtons";
 import LogoutButton from "./LogoutButton";
+import Image from "next/image";
 
 export default function AccountsDropdown(props) {
 	const [accounts, setAccounts] = useState([]);
@@ -94,6 +95,14 @@ export default function AccountsDropdown(props) {
 											{account.institution}
 										</span>
 									</label>
+									<div className="ml-2">
+										<Image
+											src={`/${account.institution.toLowerCase()}.png`}
+											width={20}
+											height={20}
+											alt={account.institution}
+										/>
+									</div>
 								</div>
 							</li>
 						);

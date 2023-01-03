@@ -31,7 +31,11 @@ export default async function GetTransactionsHandler(req, res) {
 					})
 					.then(async (response) => {
 						response.data.added.forEach((transaction) => {
-							if (body.activeAccounts.includes(transaction.account_id)) {
+							if (
+								body.activeAccounts.includes(
+									transaction.account_id
+								)
+							) {
 								transactions.push({
 									account_id: transaction.account_id,
 									amount: transaction.amount,
@@ -46,7 +50,6 @@ export default async function GetTransactionsHandler(req, res) {
 						});
 					});
 			}
-			// Sort transactions by date
 			transactions.sort((a, b) => {
 				return new Date(b.date) - new Date(a.date);
 			});

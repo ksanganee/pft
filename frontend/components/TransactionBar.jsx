@@ -1,13 +1,19 @@
-import { useState } from "react";
-
 export default function TransactionBar(props) {
-	// account_id: transaction.account_id,
-	// amount: transaction.amount,
-	// category: transaction.category[0],
-	// date: transaction.date,
-	// iso_currency_code: transaction.iso_currency_code,
-	// merchant_name: transaction.merchant_name,
-	// name: transaction.name,
+	// props.transaction {
+	//   account_id,
+	//   amount,
+	//   category,
+	//   date,
+	//   iso_currency_code,
+	//   merchant_name,
+	//   name,
+	// }
+
+	// props.account {
+	//   account_id,
+	//   name,
+	//   institution,
+	// }
 
 	return (
 		props.transaction &&
