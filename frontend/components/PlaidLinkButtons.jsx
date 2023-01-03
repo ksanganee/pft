@@ -50,9 +50,9 @@ export default function PlaidLinkButtons(props) {
 
 	return (
 		<>
-			{token &&
-				ready(
-					<>
+			{token && (
+				<>
+					{ready && (
 						<li>
 							<div
 								className="flex p-2 rounded hover:bg-gray-100 h-[36px] items-center h-screen"
@@ -72,8 +72,9 @@ export default function PlaidLinkButtons(props) {
 								<p className="ml-[5px] mr-8">Add Accounts</p>
 							</div>
 						</li>
-					</>
-				)}
+					)}
+				</>
+			)}
 		</>
 	);
 }
