@@ -12,7 +12,7 @@ export default function LoginPageHandler() {
 		if (pb.authStore.model != null) {
 			router.push("/dashboard");
 		}
-	}, []);
+	}, [router]);
 
 	return (
 		<Centred>
