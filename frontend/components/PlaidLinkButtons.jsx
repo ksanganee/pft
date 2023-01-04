@@ -7,22 +7,23 @@ export default function PlaidLinkButtons(props) {
 
 	const [token, setToken] = useState("");
 
-	const createLinkToken = async () => {
-		await fetch("/api/create_link_token", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setToken(data.link_token);
-			});
-	};
+	
 
 	useEffect(() => {
+		const createLinkToken = async () => {
+			await fetch("/api/create_link_token", {
+				method: "POST",
+				body: JSON.stringify({
+					userId: props.userModel.id,
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					setToken(data.link_token);
+				});
+		};
 		createLinkToken();
-	}, []);
+	}, [props.userModel.id]);
 
 	const linkSuccessCallback = useCallback(async (publicToken, _) => {
 		await fetch("/api/send_public_token", {
@@ -36,11 +37,11 @@ export default function PlaidLinkButtons(props) {
 			.then((_) => {
 				props.refresh();
 			});
-	}, []);
+	}, [props]);
 
 	const linkErrorCallback = useCallback((_) => {
 		router.push("/error");
-	}, []);
+	}, [router]);
 
 	const { open, ready } = usePlaidLink({
 		token: token,
