@@ -7,47 +7,50 @@ export default function PlaidLinkButtons(props) {
 
 	const [token, setToken] = useState("");
 
-	
-
-	useEffect(() => {
-		const createLinkToken = async () => {
-			await fetch("/api/create_link_token", {
-				method: "POST",
-				body: JSON.stringify({
-					userId: props.userModel.id,
-				}),
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					setToken(data.link_token);
-				});
-		};
-		createLinkToken();
-	}, [props.userModel.id]);
-
-	const linkSuccessCallback = useCallback(async (publicToken, _) => {
-		await fetch("/api/send_public_token", {
+	const createLinkToken = useCallback(async () => {
+		await fetch("/api/create_link_token", {
 			method: "POST",
 			body: JSON.stringify({
-				publicToken,
 				userId: props.userModel.id,
 			}),
 		})
 			.then((res) => res.json())
-			.then((_) => {
+			.then((data) => {
+				setToken(data.link_token);
+			});
+	}, [props.userModel.id]);
+
+	const linkSuccessCallback = useCallback(
+		async (publicToken, _) => {
+			await fetch("/api/send_public_token", {
+				method: "POST",
+				body: JSON.stringify({
+					publicToken,
+					userId: props.userModel.id,
+				}),
+			}).then((_) => {
 				props.refresh();
 			});
-	}, [props]);
+		},
+		[props]
+	);
 
-	const linkErrorCallback = useCallback((_) => {
-		router.push("/error");
-	}, [router]);
+	const linkErrorCallback = useCallback(
+		(_) => {
+			router.push("/error");
+		},
+		[router]
+	);
 
 	const { open, ready } = usePlaidLink({
 		token: token,
 		onSuccess: linkSuccessCallback,
 		onExit: linkErrorCallback,
 	});
+
+	useEffect(() => {
+		createLinkToken();
+	}, [createLinkToken]);
 
 	return (
 		<>

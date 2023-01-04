@@ -18,9 +18,7 @@ export default function TransactionBar(props) {
 	// }
 
 	const uglyDate = new Date(props.transaction.date);
-	const date = `${uglyDate.getDate()}/${
-		uglyDate.getMonth() + 1
-	}/${uglyDate.getFullYear()}`;
+	const date = `${uglyDate.getDate()}/${uglyDate.getMonth() + 1}/${uglyDate.getFullYear()}`;
 
 	return (
 		props.transaction &&

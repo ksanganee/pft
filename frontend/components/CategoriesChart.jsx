@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import TransactionBar from "./TransactionBar";
@@ -9,7 +9,7 @@ function makeColor(colorNum, colors) {
 	return (colorNum * (360 / colors)) % 360;
 }
 
-const groupTransactionsByCategory = (array) => {
+function groupTransactionsByCategory(array) {
 	return array.reduce((result, currentValue) => {
 		if (!result[currentValue.category]) {
 			result[currentValue.category] = 0;
@@ -17,62 +17,58 @@ const groupTransactionsByCategory = (array) => {
 		result[currentValue.category] += currentValue.amount;
 		return result;
 	}, {});
-};
+}
 
 export default function CategoriesChart(props) {
 	const [incomings, setIncomings] = useState([]);
 	const [outgoings, setOutgoings] = useState([]);
 	const [chartData, setChartData] = useState(null);
 
+	ChartJS.register(ArcElement, Tooltip, Legend);
+
+	const getTransactions = useCallback(async () => {
+		const response = await fetch("/api/get_past_month_transactions", {
+			method: "POST",
+			body: JSON.stringify({
+				userId: props.userModel.id,
+				activeAccounts: props.activeAccounts.map(
+					(account) => account.account_id
+				),
+			}),
+		});
+		const data = await response.json();
+
+		setIncomings(data.incomings);
+		setOutgoings(data.outgoings);
+
+		const groups = groupTransactionsByCategory(data.outgoings);
+
+		setChartData({
+			labels: Object.keys(groups),
+			datasets: [
+				{
+					label: " Total spent (£)",
+					data: Object.values(groups),
+					backgroundColor: Object.values(groups).map((_, i) => {
+						return `hsl(${makeColor(i, Object.keys(groups).length)}, 100%, 70%)`;
+					}),
+					borderWidth: 5,
+					borderRadius: 15,
+					hoverBorderWidth: 5,
+					borderJoinStyle: "round",
+				},
+			],
+		});
+	}, [props.activeAccounts, props.userModel.id]);
+
 	useEffect(() => {
-		const getTransactions = async () => {
-			await fetch("/api/get_past_month_transactions", {
-				method: "POST",
-				body: JSON.stringify({
-					userId: props.userModel.id,
-					activeAccounts: props.activeAccounts.map(
-						(account) => account.account_id
-					),
-				}),
-			})
-				.then((res) => res.json())
-				.then((obj) => {
-					setIncomings(obj.incomings);
-					setOutgoings(obj.outgoings);
-					const groups = groupTransactionsByCategory(obj.outgoings);
-					const labels = Object.keys(groups);
-					let backgroundColor = [];
-					for (let i = 0; i < labels.length; i++) {
-						makeColor(i, labels.length);
-						backgroundColor.push(
-							`hsl(${makeColor(i, labels.length)}, 100%, 70%)`
-						);
-					}
-					setChartData({
-						labels,
-						datasets: [
-							{
-								label: " Total spent (£)",
-								data: Object.values(groups),
-								backgroundColor: backgroundColor,
-								borderWidth: 5,
-								borderRadius: 15,
-								hoverBorderWidth: 5,
-								borderJoinStyle: "round",
-							},
-						],
-					});
-				});
-		};
 		setChartData(null);
 		getTransactions();
-	}, [props]);
+	}, [getTransactions]);
 
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
-
-	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	return chartData ? (
 		<div className="flex-col w-full space-y-6">
