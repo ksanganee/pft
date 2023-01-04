@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import TransactionBar from "./TransactionBar";
+import LoadingIndicator from "./LoadingIndicator";
 
 export default function TransactionsList(props) {
 	const [transactions, setTransactions] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const getTransactions = async () => {
 		await fetch("/api/get_transactions", {
@@ -17,10 +19,12 @@ export default function TransactionsList(props) {
 			.then((res) => res.json())
 			.then((data) => {
 				setTransactions(data.transactions);
+				setLoading(false);
 			});
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		getTransactions();
 	}, [props.activeAccounts]);
 
@@ -28,9 +32,10 @@ export default function TransactionsList(props) {
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
 
-	return (
-		// <VStack>
-		<div className="flex-col space-y-2 text-sm">
+	return loading ? (
+		<LoadingIndicator />
+	) : (
+		<div className="flex-col space-y-2 text-sm w-[80%] overflow-auto">
 			{transactions.map((transaction, i) => (
 				<TransactionBar
 					key={i}
@@ -39,6 +44,5 @@ export default function TransactionsList(props) {
 				/>
 			))}
 		</div>
-		// </VStack>
 	);
 }

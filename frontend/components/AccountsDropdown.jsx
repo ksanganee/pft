@@ -33,7 +33,7 @@ export default function AccountsDropdown(props) {
 	}, [accounts]);
 
 	return (
-		<>
+		<div>
 			<button
 				id="dropdownBgHoverButton"
 				className="rounded bg-[#fb923c] p-2 text-white hover:bg-[#fb923c]/80 mt-2"
@@ -114,6 +114,6 @@ export default function AccountsDropdown(props) {
 					<LogoutButton />
 				</ul>
 			</div>
-		</>
+		</div>
 	);
 }

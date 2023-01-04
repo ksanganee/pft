@@ -55,7 +55,7 @@ export default function PlaidLinkButtons(props) {
 					{ready && (
 						<li>
 							<div
-								className="flex p-2 rounded hover:bg-gray-100 h-[36px] items-center h-screen"
+								className="flex p-2 rounded hover:bg-gray-100 h-[36px] items-center"
 								onClick={() => open()}
 							>
 								<svg

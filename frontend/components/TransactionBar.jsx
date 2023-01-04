@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function TransactionBar(props) {
 	// props.transaction {
 	//   account_id,
@@ -15,18 +17,39 @@ export default function TransactionBar(props) {
 	//   institution,
 	// }
 
+	const uglyDate = new Date(props.transaction.date);
+	const date = `${uglyDate.getDate()}/${
+		uglyDate.getMonth() + 1
+	}/${uglyDate.getFullYear()}`;
+
 	return (
 		props.transaction &&
 		props.account && (
 			<div
 				className={`${
-					props.transaction.amount > 0 ? "bg-red-50" : "bg-green-50"
-				} rounded-md p-2`}
+					props.transaction.amount > 0
+						? "bg-red-50 hover:bg-red-100"
+						: "bg-green-50 hover:bg-green-100"
+				} rounded-md p-2 flex justify-between items-center`}
 			>
-				£{Math.abs(props.transaction.amount)}{" "}
-				{props.transaction.amount > 0 ? "to" : "from"}{" "}
-				{props.transaction.merchant_name} in {props.account.name}{" "}
-				{props.account.institution} on {props.transaction.date}
+				<div className="flex">
+					£{Math.abs(props.transaction.amount)}
+				</div>
+				{props.transaction.merchant_name ? (
+					<div className="">{props.transaction.merchant_name}</div>
+				) : (
+					<div className="">{props.transaction.name}</div>
+				)}
+				<div className="flex">
+					{date}
+					<Image
+						src={`/${props.account.institution.toLowerCase()}.png`}
+						width={20}
+						height={20}
+						alt={props.account.institution}
+						className="ml-2 shadow-sm rounded"
+					/>
+				</div>
 			</div>
 		)
 	);
