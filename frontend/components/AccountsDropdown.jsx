@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PlaidLinkButtons from "./PlaidLinkButtons";
 import LogoutButton from "./LogoutButton";
 import Image from "next/image";
@@ -7,22 +7,24 @@ export default function AccountsDropdown(props) {
 	const [accounts, setAccounts] = useState([]);
 	const [dropped, setDropped] = useState(false);
 
+
+	const getAccounts = useCallback(async () => {
+		await fetch("/api/get_accounts", {
+			method: "POST",
+			body: JSON.stringify({
+				userId: props.userModel.id,
+			}),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				setAccounts(data.accounts);
+				props.setActiveAccounts(data.accounts);
+			});
+	}, [props.userModel.id, props.setActiveAccounts]);
+
 	useEffect(() => {
-		const getAccounts = async () => {
-			await fetch("/api/get_accounts", {
-				method: "POST",
-				body: JSON.stringify({
-					userId: props.userModel.id,
-				}),
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					setAccounts(data.accounts);
-					props.setActiveAccounts(data.accounts);
-				});
-		};
 		getAccounts();
-	}, [props]);
+	}, [getAccounts]);
 
 	useEffect(() => {
 		const checkboxes = document.querySelectorAll("input[type=checkbox]");
