@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TabViewer from "../components/TabViewer";
 import Centered from "../layouts/Centred";
 import VStack from "../layouts/VStack";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 export default function Dashboard() {
 	let router = useRouter();
@@ -27,9 +28,11 @@ export default function Dashboard() {
 		<>
 			{userModel && (
 				<Centered>
+				{/* <div className="flex justify-center items-center h-screen"> */}
 					<VStack>
 						<TabViewer userModel={userModel} />
 					</VStack>
+				{/* </div> */}
 				</Centered>
 			)}
 		</>

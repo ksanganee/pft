@@ -41,8 +41,7 @@ export default async function GetAccountsHandler(req, res) {
 										accounts.push({
 											account_id: account.account_id,
 											name: account.name,
-											institution:
-												institution_response.data.institution.name.split()[0],
+											institution: institution_response.data.institution.name.split(" ")[0],
 										});
 									}
 								);
