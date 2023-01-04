@@ -24,50 +24,49 @@ export default function CategoriesChart(props) {
 	const [outgoings, setOutgoings] = useState([]);
 	const [chartData, setChartData] = useState(null);
 
-	const getTransactions = async () => {
-		await fetch("/api/get_past_month_transactions", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
-					(account) => account.account_id
-				),
-			}),
-		})
-			.then((res) => res.json())
-			.then((obj) => {
-				setIncomings(obj.incomings);
-				setOutgoings(obj.outgoings);
-				const groups = groupTransactionsByCategory(obj.outgoings);
-				const labels = Object.keys(groups);
-				let backgroundColor = [];
-				for (let i = 0; i < labels.length; i++) {
-					makeColor(i, labels.length);
-					backgroundColor.push(
-						`hsl(${makeColor(i, labels.length)}, 100%, 70%)`
-					);
-				}
-				setChartData({
-					labels,
-					datasets: [
-						{
-							label: " Total spent (£)",
-							data: Object.values(groups),
-							backgroundColor: backgroundColor,
-							borderWidth: 5,
-							borderRadius: 15,
-							hoverBorderWidth: 5,
-							borderJoinStyle: "round",
-						},
-					],
-				});
-			});
-	};
-
 	useEffect(() => {
+		const getTransactions = async () => {
+			await fetch("/api/get_past_month_transactions", {
+				method: "POST",
+				body: JSON.stringify({
+					userId: props.userModel.id,
+					activeAccounts: props.activeAccounts.map(
+						(account) => account.account_id
+					),
+				}),
+			})
+				.then((res) => res.json())
+				.then((obj) => {
+					setIncomings(obj.incomings);
+					setOutgoings(obj.outgoings);
+					const groups = groupTransactionsByCategory(obj.outgoings);
+					const labels = Object.keys(groups);
+					let backgroundColor = [];
+					for (let i = 0; i < labels.length; i++) {
+						makeColor(i, labels.length);
+						backgroundColor.push(
+							`hsl(${makeColor(i, labels.length)}, 100%, 70%)`
+						);
+					}
+					setChartData({
+						labels,
+						datasets: [
+							{
+								label: " Total spent (£)",
+								data: Object.values(groups),
+								backgroundColor: backgroundColor,
+								borderWidth: 5,
+								borderRadius: 15,
+								hoverBorderWidth: 5,
+								borderJoinStyle: "round",
+							},
+						],
+					});
+				});
+		};
 		setChartData(null);
 		getTransactions();
-	}, [props.activeAccounts]);
+	}, [props]);
 
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
