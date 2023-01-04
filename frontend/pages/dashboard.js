@@ -7,7 +7,7 @@ import VStack from "../layouts/VStack";
 import LoadingIndicator from "../components/LoadingIndicator";
 
 export default function Dashboard() {
-	let router = useRouter();
+	const router = useRouter();
 
 	const pb = new PocketBase("http://127.0.0.1:8090");
 
@@ -22,17 +22,18 @@ export default function Dashboard() {
 		} else {
 			setUserModel(pb.authStore.model);
 		}
-	}, []);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router]);
 
 	return (
 		<>
 			{userModel && (
 				<Centered>
-				{/* <div className="flex justify-center items-center h-screen"> */}
+					{/* <div className="flex justify-center items-center h-screen"> */}
 					<VStack>
 						<TabViewer userModel={userModel} />
 					</VStack>
-				{/* </div> */}
+					{/* </div> */}
 				</Centered>
 			)}
 		</>

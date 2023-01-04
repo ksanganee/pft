@@ -7,23 +7,22 @@ export default function AccountsDropdown(props) {
 	const [accounts, setAccounts] = useState([]);
 	const [dropped, setDropped] = useState(false);
 
-	const getAccounts = async () => {
-		await fetch("/api/get_accounts", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setAccounts(data.accounts);
-				props.setActiveAccounts(data.accounts);
-			});
-	};
-
 	useEffect(() => {
+		const getAccounts = async () => {
+			await fetch("/api/get_accounts", {
+				method: "POST",
+				body: JSON.stringify({
+					userId: props.userModel.id,
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					setAccounts(data.accounts);
+					props.setActiveAccounts(data.accounts);
+				});
+		};
 		getAccounts();
-	}, []);
+	}, [props]);
 
 	useEffect(() => {
 		const checkboxes = document.querySelectorAll("input[type=checkbox]");

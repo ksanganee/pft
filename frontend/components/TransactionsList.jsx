@@ -6,27 +6,26 @@ export default function TransactionsList(props) {
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const getTransactions = async () => {
-		await fetch("/api/get_transactions", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
-					(account) => account.account_id
-				),
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setTransactions(data.transactions);
-				setLoading(false);
-			});
-	};
-
 	useEffect(() => {
+		const getTransactions = async () => {
+			await fetch("/api/get_transactions", {
+				method: "POST",
+				body: JSON.stringify({
+					userId: props.userModel.id,
+					activeAccounts: props.activeAccounts.map(
+						(account) => account.account_id
+					),
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					setTransactions(data.transactions);
+					setLoading(false);
+				});
+		};
 		setLoading(true);
 		getTransactions();
-	}, [props.activeAccounts]);
+	}, [props.activeAccounts, props.userModel.id]);
 
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
