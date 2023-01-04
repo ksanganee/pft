@@ -92,6 +92,7 @@ export default function CategoriesChart(props) {
 							key={i}
 							transaction={transaction}
 							account={accountsMap.get(transaction.account_id)}
+							colour={false}
 						/>
 					))}
 				</div>
