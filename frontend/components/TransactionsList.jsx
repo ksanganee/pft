@@ -41,6 +41,7 @@ export default function TransactionsList(props) {
 					key={i}
 					transaction={transaction}
 					account={accountsMap.get(transaction.account_id)}
+					colour={true}
 				/>
 			))}
 		</div>

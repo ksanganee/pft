@@ -18,16 +18,20 @@ export default function TransactionBar(props) {
 	// }
 
 	const uglyDate = new Date(props.transaction.date);
-	const date = `${uglyDate.getDate()}/${uglyDate.getMonth() + 1}/${uglyDate.getFullYear()}`;
+	const date = `${uglyDate.getDate()}/${
+		uglyDate.getMonth() + 1
+	}/${uglyDate.getFullYear()}`;
 
 	return (
 		props.transaction &&
 		props.account && (
 			<div
 				className={`${
-					props.transaction.amount > 0
-						? "bg-red-50 hover:bg-red-100"
-						: "bg-green-50 hover:bg-green-100"
+					props.colour
+						? props.transaction.amount > 0
+							? "bg-red-50 hover:bg-red-100"
+							: "bg-green-50 hover:bg-green-100"
+						: "bg-gray-100 hover:bg-gray-200"
 				} rounded-md p-2 flex justify-between items-center`}
 			>
 				<div className="flex">
