@@ -20,6 +20,7 @@ export default function AccountsDropdown(props) {
 				setAccounts(data.accounts);
 				props.setActiveAccounts(data.accounts);
 			});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.userModel.id, props.setActiveAccounts]);
 
 	useEffect(() => {

@@ -20,7 +20,7 @@ export default async function CreateLinkTokenHandler(req, res) {
 		user: {
 			client_user_id: body.userId,
 		},
-		products: ["assets", "auth", "transactions"],
+		products: ["auth", "transactions"],
 	});
 
 	res.status(200).json(plaid_response.data);

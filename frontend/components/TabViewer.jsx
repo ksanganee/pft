@@ -3,6 +3,7 @@ import AccountsDropdown from "./AccountsDropdown";
 import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
 import LoadingIndicator from "./LoadingIndicator";
+import InvestmentsTable from "./InvestmentsTable";
 
 export default function TabViewer(props) {
 	const [currentTab, setCurrentTab] = useState(4);
@@ -33,7 +34,7 @@ export default function TabViewer(props) {
 		},
 		{
 			name: "Investments",
-			component: <div>Tab 4</div>,
+			component: <InvestmentsTable userModel={props.userModel} />,
 		},
 	];
 
@@ -61,7 +62,7 @@ export default function TabViewer(props) {
 					setActiveAccounts={setActiveAccounts}
 				/>
 			</div>
-			<div className="mt-8 flex justify-center h-[70vh] bg-white rounded max-w-[70vw]">
+			<div className="mt-8 flex justify-center h-[70vh] bg-white rounded max-w-[80vw]">
 				{tabs[currentTab - 1].component}
 			</div>
 		</>
