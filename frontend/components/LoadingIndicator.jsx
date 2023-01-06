@@ -1,10 +1,10 @@
 export default function LoadingIndicator(props) {
 	return (
-		<div className="flex items-center justify-center -translate-y-[10vh]">
+		<div className={`flex items-center justify-center ${props.small ? "w-[55px]" : "-translate-y-[10vh]"} ${props.width}`}>
 			<div role="status">
 				<svg
 					aria-hidden="true"
-					className="w-8 h-8 mr-2 text-gray-200 animate-spin fill-[#fb923c]"
+					className={`${props.small ? "w-4 h-4" : "w-8 h-8"} text-gray-200 animate-spin fill-[#fb923c]`}
 					viewBox="0 0 100 100"
 					xmlns="http://www.w3.org/2000/svg"
 				>

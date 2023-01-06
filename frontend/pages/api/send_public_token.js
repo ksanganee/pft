@@ -19,6 +19,7 @@ export default async function SendPublicTokenHandler(req, res) {
 			public_token: body.publicToken,
 		})
 		.then(async (response) => {
+			console.log(response.data)
 			const pb = new PocketBase("http://127.0.0.1:8090");
 			await pb.records
 				.create("tokens", {
