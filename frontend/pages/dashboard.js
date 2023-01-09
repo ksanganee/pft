@@ -1,40 +1,17 @@
-import PocketBase from "pocketbase";
 import { useRouter } from "next/router";
+import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
-import LogoutButton from "../components/LogoutButton";
+import TabViewer from "../components/TabViewer";
 import Centered from "../layouts/Centred";
 import VStack from "../layouts/VStack";
+import LoadingIndicator from "../components/LoadingIndicator";
 
-export default function dashboard() {
-	let router = useRouter();
+export default function Dashboard() {
+	const router = useRouter();
 
 	const pb = new PocketBase("http://127.0.0.1:8090");
 
 	const [userModel, setUserModel] = useState(null);
-	const [token, setToken] = useState("");
-
-	const handleLink = async (e) => {
-		e.preventDefault();
-		await pb.records.create("secret", {
-			user: userModel.id,
-			token: "test",
-		});
-		setToken("test");
-	};
-
-	const getToken = async (model) => {
-		await pb.records
-			.getList("secret", 1, 1, {
-				filter: `user = "${model.id}"`,
-			})
-			.then((res) => {
-				setToken(res.items[0].token);
-			})
-			.catch((_) => {
-				console.log("Not linked account with plaid");
-				// router.push("/error");
-			});
-	};
 
 	useEffect(() => {
 		if (pb.authStore.model == null) {
@@ -44,26 +21,21 @@ export default function dashboard() {
 			});
 		} else {
 			setUserModel(pb.authStore.model);
-			getToken(pb.authStore.model);
 		}
-	}, []);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router]);
 
 	return (
-		<Centered>
-			<VStack>
-				{userModel && <p>Signed in as {userModel.email}</p>}
-				{token ? (
-					<p>Token: {token}</p>
-				) : (
-					<button
-						className="rounded bg-[#fb923c] p-1.5 right-1 text-white"
-						onClick={handleLink}
-					>
-						Link account with Plaid
-					</button>
-				)}
-				<LogoutButton />
-			</VStack>
-		</Centered>
+		<>
+			{userModel && (
+				<Centered>
+					{/* <div className="flex justify-center items-center h-screen"> */}
+					<VStack>
+						<TabViewer userModel={userModel} />
+					</VStack>
+					{/* </div> */}
+				</Centered>
+			)}
+		</>
 	);
 }
