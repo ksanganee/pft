@@ -2,7 +2,7 @@ import VisitLink from "../components/VisitLink";
 import Centred from "../layouts/Centred";
 import VStack from "../layouts/VStack";
 
-export default function error() {
+export default function ErrorHandler() {
 	return (
 		<Centred>
 			<VStack>

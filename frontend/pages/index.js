@@ -1,13 +1,13 @@
 import VisitLink from "../components/VisitLink";
-import SingleCentered from "../layouts/Centred";
+import Centred from "../layouts/Centred";
 import VStack from "../layouts/VStack";
 
-export default function index() {
+export default function IndexHandler() {
 	return (
-		<SingleCentered>
+		<Centred>
 			<VStack>
-				<VisitLink destination="/login" text="Login"/>
+				<VisitLink destination="/login" text="Login" />
 			</VStack>
-		</SingleCentered>
+		</Centred>
 	);
 }

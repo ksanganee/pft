@@ -1,5 +1,5 @@
-import PocketBase from "pocketbase";
 import { useRouter } from "next/router";
+import PocketBase from "pocketbase";
 
 export default function LogoutButton() {
 	const pb = new PocketBase("http://127.0.0.1:8090");
@@ -16,11 +16,24 @@ export default function LogoutButton() {
 	};
 
 	return (
-		<button
-			className="rounded bg-[#fb923c] pt-1 pb-1 pl-2 pr-2 right-1 text-white"
-			onClick={handleSignout}
-		>
-			Logout
-		</button>
+		<li>
+			<div
+				className="flex p-2 rounded hover:bg-gray-100 h-[36px] items-center"
+				onClick={handleSignout}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 26"
+					className="w-[36px] h-[20px] mr-1 ml-1 pr-[1px]"
+					fill="#FB923C"
+					// make the stroke extra rounded
+					strokeLinecap="round"
+					// fill="#FFFFFF"
+				>
+					<path d="M15,24H0V2h15v8h-2V4H2v18h11v-6h2V24z M18.4,18.7L17,17.3l3.3-3.3H5v-2h15.3L17,8.7l1.4-1.4L24,13L18.4,18.7z"></path>{" "}
+				</svg>
+				<p className="ml-[5px] mr-8">Logout</p>
+			</div>
+		</li>
 	);
 }
