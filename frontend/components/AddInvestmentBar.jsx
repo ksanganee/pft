@@ -11,6 +11,17 @@ export default function AddInvestmentBar(props) {
 		["GOOG", { name: "Google", ticker: "GOOG" }],
 	]);
 
+	const getPrice = async () => {
+		const response = await fetch("/api/get_investment_price", {
+			method: "POST",
+			body: JSON.stringify({
+				ticker: props.investment.ticker,
+			}),
+		});
+		const data = await response.json();
+		return data.price;
+	};
+
 	return (
 		<div>
 			<button
@@ -30,7 +41,6 @@ export default function AddInvestmentBar(props) {
 							quantity: quantityInput.value,
 							cost: costInput.value,
 						};
-						// props.addInvestment(newInvestment);
 						const response = await fetch("/api/add_investment", {
 							method: "POST",
 							body: JSON.stringify({
@@ -117,7 +127,9 @@ export default function AddInvestmentBar(props) {
 						}}
 					/>
 				</div>
-				<div className="w-[130px] py-4">-</div>
+				<div className="w-[130px] py-4">
+					-
+				</div>
 				<div className="w-[130px] py-4">-</div>
 			</div>
 		</div>

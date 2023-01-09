@@ -6,7 +6,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import InvestmentsTable from "./InvestmentsTable";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(4);
+	const [currentTab, setCurrentTab] = useState(1);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
