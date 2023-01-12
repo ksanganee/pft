@@ -25,5 +25,13 @@
 			],
 			"env": {}
 		},
+	],
+	"cSpell.words": [
+		"pocketbase",
+		"Signout",
+		"Signup"
+	],
+	"eslint.workingDirectories": [
+		{ "mode": "auto" }
 	]
 }

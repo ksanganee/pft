@@ -1,8 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+	/* border: 1px solid red; */
+	box-sizing: border-box;
+	font-family: "Rubik", sans-serif;
+	user-select: none;
+	transition-duration: 200ms;
+	transition-timing-function: ease-in-out;
+}
+
+#currentTesting {
+	border: 1px solid red;
+}
 
 html,
 body {
@@ -10,18 +23,35 @@ body {
 	margin: 0;
 }
 
-a {
-	color: inherit;
-	text-decoration: none;
-}
-
-* {
-	box-sizing: border-box;
-	font-family: 'Rubik', sans-serif;
-}
-
 .formFixedWidth {
 	width: 15rem;
 	min-width: 15rem;
 	max-width: 15rem;
+}
+
+input[type="checkbox"] {
+	accent-color: #fb923c;
+}
+
+.shadow-ring {
+	box-shadow: 0 0 3px #ccc;
+}
+
+.duration-0 {
+	transition-duration: 0ms;
+}
+
+.curved-table-header {
+	border-top-left-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+}
+
+.curved-table-last-row {
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+.curved-bottom {
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
 }

@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "eslint": "8.27.0",
+    "chart.js": "^4.1.1",
+    "eslint": "^8.27.0",
     "eslint-config-next": "13.0.2",
+    "moment": "^2.29.4",
     "next": "13.0.2",
+    "plaid": "^12.2.0",
     "pocketbase": "^0.7.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-chartjs-2": "^5.1.0",
+    "react-dom": "18.2.0",
+    "react-plaid-link": "^3.3.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

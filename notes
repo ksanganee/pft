@@ -1,3 +1,17 @@
 Next.js
 frontend, backend
 opt in
+
+what happens if duplicate accounts?
+
+make transactions look good
+on hover transactions show info
+
+make categories look good
+
+budgets:
+- guess from income but allow user to change
+- make 50:30:20 rule
+- display amounts
+- add tax calculations
+
