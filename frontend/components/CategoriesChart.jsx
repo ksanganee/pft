@@ -74,7 +74,7 @@ export default function CategoriesChart(props) {
 		<div className="flex-col w-full space-y-6">
 			<div className="">Previous 30 days expenditure by category</div>
 			<div className="flex w-full">
-				<div className="">
+				<div>
 					<Pie
 						data={chartData}
 						options={{
@@ -86,13 +86,14 @@ export default function CategoriesChart(props) {
 						}}
 					/>
 				</div>
-				<div className="flex-col space-y-2 text-sm overflow-auto w-full">
+				<div className="flex-col space-y-2 text-sm overflow-auto w-full max-h-[500px]">
 					{outgoings.map((transaction, i) => (
 						<TransactionBar
 							key={i}
 							transaction={transaction}
 							account={accountsMap.get(transaction.account_id)}
 							colour={false}
+							shortDate={true}
 						/>
 					))}
 				</div>

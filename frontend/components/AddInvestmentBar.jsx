@@ -1,26 +1,30 @@
 import { useState } from "react";
 
+var yahooFinance = require("yahoo-finance");
+
 export default function AddInvestmentBar(props) {
 	const [currentTicker, setCurrentTicker] = useState("None");
 
-	const investmentMappings = new Map([
+	const investmentOptions = [
 		["None", { name: "-", ticker: "-" }],
 		["AAPL", { name: "Apple", ticker: "AAPL" }],
 		["AMZN", { name: "Amazon", ticker: "AMZN" }],
 		["MSFT", { name: "Microsoft", ticker: "MSFT" }],
 		["GOOG", { name: "Google", ticker: "GOOG" }],
-	]);
+	];
 
-	const getPrice = async () => {
-		const response = await fetch("/api/get_investment_price", {
-			method: "POST",
-			body: JSON.stringify({
-				ticker: props.investment.ticker,
-			}),
-		});
-		const data = await response.json();
-		return data.price;
-	};
+	const investmentMappings = new Map(investmentOptions);
+
+	// const getPrice = async () => {
+	// 	const response = await fetch("/api/get_investment_price", {
+	// 		method: "POST",
+	// 		body: JSON.stringify({
+	// 			ticker: props.investment.ticker,
+	// 		}),
+	// 	});
+	// 	const data = await response.json();
+	// 	return data.price;
+	// };
 
 	return (
 		<div>
@@ -96,11 +100,13 @@ export default function AddInvestmentBar(props) {
 							setCurrentTicker(e.target.value);
 						}}
 					>
-						<option value="None">Select</option>
-						<option value="AAPL">AAPL</option>
-						<option value="AMZN">AMZN</option>
-						<option value="MSFT">MSFT</option>
-						<option value="GOOG">GOOG</option>
+						{investmentOptions.map((option) => {
+							return (
+								<option key={option} value={option[0]}>
+									{option[0]}
+								</option>
+							);
+						})}
 					</select>
 				</div>
 				<div className="w-[130px] py-4">
@@ -127,9 +133,7 @@ export default function AddInvestmentBar(props) {
 						}}
 					/>
 				</div>
-				<div className="w-[130px] py-4">
-					-
-				</div>
+				<div className="w-[130px] py-4">-</div>
 				<div className="w-[130px] py-4">-</div>
 			</div>
 		</div>
