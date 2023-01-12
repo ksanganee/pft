@@ -1,13 +1,13 @@
-import { useRouter } from 'next/router'
+import VisitLink from "../components/VisitLink";
+import Centred from "../layouts/Centred";
+import VStack from "../layouts/VStack";
 
-export default function Index() {
-  let router = useRouter()
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <button className="rounded-lg bg-[#fb923c] p-1.5 right-1 text-white" onClick={() => router.push("/signup")}>
-        Sign up
-      </button>
-    </div>
-  )
+export default function IndexHandler() {
+	return (
+		<Centred>
+			<VStack>
+				<VisitLink destination="/login" text="Login" />
+			</VStack>
+		</Centred>
+	);
 }

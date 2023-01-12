@@ -1,4 +1,4 @@
 .DS_Store
-.local
+*.local
 backend/pocketbase
 backend/pb_data/*
