@@ -2,8 +2,8 @@ import { useState } from "react";
 import AccountsDropdown from "./AccountsDropdown";
 import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
-import LoadingIndicator from "./LoadingIndicator";
 import InvestmentsTable from "./InvestmentsTable";
+import BalancesInfo from "./BalancesInfo";
 
 export default function TabViewer(props) {
 	const [currentTab, setCurrentTab] = useState(1);
@@ -31,6 +31,7 @@ export default function TabViewer(props) {
 		{
 			name: "Budgets",
 			component: <div>Tab 3</div>,
+			// component: <BalancesInfo userModel={props.userModel} />,
 		},
 		{
 			name: "Investments",
@@ -67,25 +68,4 @@ export default function TabViewer(props) {
 			</div>
 		</>
 	);
-}
-
-{
-	/* <>
-	{tab === 1 && (
-		<TransactionsList
-			userModel={props.userModel}
-			activeAccounts={activeAccounts}
-		/>
-	)}
-	{tab === 2 && (
-		<CategoriesChart
-			userModel={props.userModel}
-			activeAccounts={activeAccounts}
-		/>
-	)}
-	{tab === 3 && <div>Tab 3</div>}
-	{tab === 4 && <div>Tab 4</div>} */
-}
-{
-	/* </> */
 }

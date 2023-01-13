@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-var yahooFinance = require("yahoo-finance");
-
 export default function AddInvestmentBar(props) {
 	const [currentTicker, setCurrentTicker] = useState("None");
 
