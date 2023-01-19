@@ -4,9 +4,10 @@ import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
 import InvestmentsTable from "./InvestmentsTable";
 import BalancesInfo from "./BalancesInfo";
+import BudgetsWidgit from "./BudgetsWidgit";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(1);
+	const [currentTab, setCurrentTab] = useState(4);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
@@ -30,8 +31,12 @@ export default function TabViewer(props) {
 		},
 		{
 			name: "Budgets",
-			component: <div>Tab 3</div>,
-			// component: <BalancesInfo userModel={props.userModel} />,
+			component: (
+				<BudgetsWidgit
+					userModel={props.userModel}
+					activeAccounts={activeAccounts}
+				/>
+			),
 		},
 		{
 			name: "Investments",
@@ -41,7 +46,7 @@ export default function TabViewer(props) {
 
 	return (
 		<>
-			<div className="flex text-gray-500 justify-center">
+			<div className="flex text-gray-700 justify-center">
 				{tabs.map((tab, i) => {
 					return (
 						<div
