@@ -35,7 +35,7 @@ export default function TransactionsList(props) {
 	return loading ? (
 		<LoadingIndicator />
 	) : (
-		<div className="flex-col space-y-2 text-sm w-[80%] overflow-x-scroll overflow-y-scroll">
+		<div className="flex-col space-y-2 text-sm w-[80%] overflow-auto">
 			{transactions.map((transaction, i) => (
 				<TransactionBar
 					key={i}

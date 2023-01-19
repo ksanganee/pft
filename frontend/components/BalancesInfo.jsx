@@ -14,11 +14,28 @@ export default function BalancesInfo(props) {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setBalances(data.balances);
-				console.log(data.balances);
+				for (let i = 0; i < data.balances.length; i++) {
+					for (let j = 0; j < props.activeAccounts.length; j++) {
+						if (
+							data.balances[i].account_id ==
+							props.activeAccounts[j].account_id
+						) {
+							setBalances((newBalances) => [
+								...newBalances,
+								{
+									balance: data.balances[i].balance,
+									name: props.activeAccounts[j].name,
+									institution:
+										props.activeAccounts[j].institution,
+								},
+							]);
+							break;
+						}
+					}
+				}
 				setLoading(false);
 			});
-	}, [props.userModel.id]);
+	}, [props.activeAccounts, props.userModel.id]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -28,11 +45,11 @@ export default function BalancesInfo(props) {
 	return loading ? (
 		<LoadingIndicator />
 	) : (
-		<div className="flex-col space-y-2 text-sm w-[80%] overflow-x-scroll overflow-y-scroll">
+		<div className="flex-col space-y-2 text-sm overflow-auto mb-20">
 			{balances.map((balance, i) => {
 				return (
 					<div key={i}>
-						{balance.name}
+						{balance.name} in {balance.institution}: £
 						{balance.balance}
 					</div>
 				);

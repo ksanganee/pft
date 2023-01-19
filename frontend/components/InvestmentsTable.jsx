@@ -34,7 +34,7 @@ export default function InvestmentsTable(props) {
 		<LoadingIndicator />
 	) : (
 		<div>
-			<div className="text-sm overflow-x-auto overflow-y-auto max-h-96 mb-5 curved-table-header">
+			<div className="text-sm overflow-auto max-h-96 mb-5 curved-table-header">
 				<div className="text-gray-700 bg-gray-200 flex">
 					<div scope="col" className="w-[130px] ml-5 py-3">
 						Name
