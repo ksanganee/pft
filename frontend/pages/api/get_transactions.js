@@ -1,6 +1,13 @@
 import { PlaidApi, PlaidEnvironments } from "plaid";
 import PocketBase from "pocketbase";
 
+var groupBy = function (xs, key) {
+	return xs.reduce(function (rv, x) {
+		(rv[x[key]] = rv[x[key]] || []).push(x);
+		return rv;
+	}, {});
+};
+
 export default async function GetTransactionsHandler(req, res) {
 	const body = JSON.parse(req.body);
 
@@ -50,9 +57,7 @@ export default async function GetTransactionsHandler(req, res) {
 						});
 					});
 			}
-			transactions.sort((a, b) => {
-				return new Date(b.date) - new Date(a.date);
-			});
+			transactions = groupBy(transactions, "date");
 			res.status(200).json({ transactions });
 		});
 }

@@ -3,11 +3,10 @@ import AccountsDropdown from "./AccountsDropdown";
 import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
 import InvestmentsTable from "./InvestmentsTable";
-import BalancesInfo from "./BalancesInfo";
 import BudgetsWidgit from "./BudgetsWidgit";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(4);
+	const [currentTab, setCurrentTab] = useState(2);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
