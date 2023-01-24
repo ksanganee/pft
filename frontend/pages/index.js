@@ -1,12 +1,11 @@
 import VisitLink from "../components/VisitLink";
-import VStack from "../layouts/VStack";
 
 export default function IndexHandler() {
 	return (
 		<div className="flex justify-center items-center h-screen">
-			<VStack>
+			<div className="flex-col text-center space-y-2">
 				<VisitLink destination="/login" text="Login" />
-			</VStack>
+			</div>
 		</div>
 	);
 }
