@@ -2,9 +2,8 @@ import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
 import TabViewer from "../components/TabViewer";
-import Centered from "../layouts/Centred";
+import Centred from "../layouts/Centred";
 import VStack from "../layouts/VStack";
-import LoadingIndicator from "../components/LoadingIndicator";
 
 export default function Dashboard() {
 	const router = useRouter();
@@ -22,20 +21,16 @@ export default function Dashboard() {
 		} else {
 			setUserModel(pb.authStore.model);
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router]);
 
 	return (
-		<>
-			{userModel && (
-				<Centered>
-					{/* <div className="flex justify-center items-center h-screen"> */}
-					<VStack>
-						<TabViewer userModel={userModel} />
-					</VStack>
-					{/* </div> */}
-				</Centered>
-			)}
-		</>
+		userModel && (
+			<div className="flex justify-center items-center h-screen">
+				<VStack>
+					<TabViewer userModel={userModel} />
+				</VStack>
+			</div>
+		)
 	);
 }

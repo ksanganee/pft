@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import TransactionBar from "./TransactionBar";
+import CategoryBar from "./CategoryBar";
 import LoadingIndicator from "./LoadingIndicator";
 
 function makeColor(colorNum, colors) {
@@ -20,7 +20,6 @@ function groupTransactionsByCategory(array) {
 }
 
 export default function CategoriesChart(props) {
-	const [incomings, setIncomings] = useState([]);
 	const [outgoings, setOutgoings] = useState([]);
 	const [chartData, setChartData] = useState(null);
 
@@ -38,7 +37,6 @@ export default function CategoriesChart(props) {
 		});
 		const data = await response.json();
 
-		setIncomings(data.incomings);
 		setOutgoings(data.outgoings);
 
 		const groups = groupTransactionsByCategory(data.outgoings);
@@ -50,7 +48,10 @@ export default function CategoriesChart(props) {
 					label: " Total spent (£)",
 					data: Object.values(groups),
 					backgroundColor: Object.values(groups).map((_, i) => {
-						return `hsl(${makeColor(i, Object.keys(groups).length)}, 100%, 70%)`;
+						return `hsl(${makeColor(
+							i,
+							Object.keys(groups).length
+						)}, 100%, 70%)`;
 					}),
 					borderWidth: 5,
 					borderRadius: 15,
@@ -71,10 +72,10 @@ export default function CategoriesChart(props) {
 	);
 
 	return chartData ? (
-		<div className="flex-col w-full space-y-6">
-			<div className="">Previous 30 days expenditure by category</div>
-			<div className="flex w-full">
-				<div>
+		<div className="flex-col w-[120vh] space-y-6">
+			<div className="text-base">Previous 30 days expenditure by category</div>
+			<div className="flex w-[120vh] justify-center space-x-3">
+				<div className="w-[60vh]">
 					<Pie
 						data={chartData}
 						options={{
@@ -86,14 +87,12 @@ export default function CategoriesChart(props) {
 						}}
 					/>
 				</div>
-				<div className="flex-col space-y-2 text-sm overflow-auto w-full max-h-[500px]">
+				<div className="flex-col space-y-2 text-sm overflow-auto max-h-[60vh] w-[60vh]">
 					{outgoings.map((transaction, i) => (
-						<TransactionBar
+						<CategoryBar
 							key={i}
 							transaction={transaction}
 							account={accountsMap.get(transaction.account_id)}
-							colour={false}
-							shortDate={true}
 						/>
 					))}
 				</div>
