@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
 import TabViewer from "../components/TabViewer";
-import VStack from "../layouts/VStack";
 
 export default function Dashboard() {
 	const router = useRouter();
@@ -26,9 +25,9 @@ export default function Dashboard() {
 	return (
 		userModel && (
 			<div className="flex justify-center items-center h-screen">
-				<VStack>
+				<div className="flex-col text-center space-y-2">
 					<TabViewer userModel={userModel} />
-				</VStack>
+				</div>
 			</div>
 		)
 	);
