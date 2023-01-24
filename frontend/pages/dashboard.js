@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
 import TabViewer from "../components/TabViewer";
-import Centred from "../layouts/Centred";
 import VStack from "../layouts/VStack";
 
 export default function Dashboard() {

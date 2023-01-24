@@ -1,10 +1,9 @@
 import SignupForm from "../components/SignupForm";
-import Centred from "../layouts/Centred";
 
 export default function SignupPageHandler() {
 	return (
-		<Centred>
+		<div className="flex justify-center items-center h-screen">
 			<SignupForm />
-		</Centred>
+		</div>
 	);
 }
