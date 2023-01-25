@@ -25,7 +25,7 @@ export default function Dashboard() {
 	return (
 		userModel && (
 			<div className="flex justify-center items-center h-screen">
-				<div className="flex-col text-center space-y-2">
+				<div className="flex-col text-center">
 					<TabViewer userModel={userModel} />
 				</div>
 			</div>

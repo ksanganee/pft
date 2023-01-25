@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
-import BalancesInfo from "./BalancesInfo";
 
-export default function BudgetsWidgit(props) {
+export default function BudgetCalculator(props) {
 	const [loading, setLoading] = useState(true);
 	const [income, setIncome] = useState(0);
 
@@ -23,7 +22,7 @@ export default function BudgetsWidgit(props) {
 				for (let i = 0; i < data.incomings.length; i++) {
 					predictedIncome += -1 * data.incomings[i].amount;
 				}
-				setIncome(predictedIncome, setLoading(false));
+				setIncome(Math.round(predictedIncome), setLoading(false));
 			});
 	}, [props.activeAccounts, props.userModel.id]);
 
@@ -35,10 +34,6 @@ export default function BudgetsWidgit(props) {
 		<LoadingIndicator />
 	) : (
 		<div className="flex-col space-y-2 w-[80%] overflow-auto">
-			<BalancesInfo
-				activeAccounts={props.activeAccounts}
-				userModel={props.userModel}
-			/>
 			<div className="mt-5">
 				<input
 					type="number"
