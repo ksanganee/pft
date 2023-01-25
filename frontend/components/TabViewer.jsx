@@ -3,10 +3,10 @@ import AccountsDropdown from "./AccountsDropdown";
 import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
 import InvestmentsTable from "./InvestmentsTable";
-import BudgetsWidgit from "./BudgetsWidgit";
+import BudgetsSection from "./BudgetsSection";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(2);
+	const [currentTab, setCurrentTab] = useState(3);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
@@ -31,7 +31,7 @@ export default function TabViewer(props) {
 		{
 			name: "Budgets",
 			component: (
-				<BudgetsWidgit
+				<BudgetsSection
 					userModel={props.userModel}
 					activeAccounts={activeAccounts}
 				/>

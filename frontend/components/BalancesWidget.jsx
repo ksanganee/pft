@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
 
-export default function BalancesInfo(props) {
+export default function BalancesWidget(props) {
 	const [balances, setBalances] = useState([]);
 	const [loading, setLoading] = useState(true);
 
 	const getTransactions = useCallback(async () => {
+		setBalances([]);
 		await fetch("/api/get_balances", {
 			method: "POST",
 			body: JSON.stringify({
@@ -43,7 +44,9 @@ export default function BalancesInfo(props) {
 	}, [getTransactions]);
 
 	return loading ? (
-		<LoadingIndicator />
+		<div className="h-[200px] w-[200px] flex justify-center items-center">
+			<LoadingIndicator small={true} />
+		</div>
 	) : (
 		<div className="flex-col space-y-2 text-sm overflow-auto mb-20">
 			{balances.map((balance, i) => {

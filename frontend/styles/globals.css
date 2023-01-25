@@ -76,11 +76,3 @@ input[type="checkbox"] {
 	height: 5em;
 	transform: translateY(-70px);
 }
-
-#outerDiv {
-	border: 1px solid red;
-}
-
-#innerDiv {
-	border: 1px solid blue;
-}
