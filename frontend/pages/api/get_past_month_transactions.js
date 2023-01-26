@@ -10,11 +10,11 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 	let outgoings = [];
 
 	const plaidClient = new PlaidApi({
-		basePath: PlaidEnvironments.sandbox,
+		basePath: process.env.ENVIRONMENT === "development" ? PlaidEnvironments.development : PlaidEnvironments.sandbox,
 		baseOptions: {
 			headers: {
 				"PLAID-CLIENT-ID": process.env.CLIENT_ID,
-				"PLAID-SECRET": process.env.SANDBOX_SECRET,
+				"PLAID-SECRET": process.env.ENVIRONMENT === "development" ? process.env.DEVELOPMENT_SECRET : process.env.SANDBOX_SECRET,
 			},
 		},
 	});

@@ -19,7 +19,6 @@ export default function TransactionsList(props) {
 			.then((res) => res.json())
 			.then((data) => {
 				setTransactions(data.transactions);
-				console.log(data.transactions);
 				setLoading(false);
 			});
 	}, [props.activeAccounts, props.userModel.id]);

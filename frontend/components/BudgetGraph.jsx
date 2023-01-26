@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { useCallback, useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import LoadingIndicator from "./LoadingIndicator";
 
 ChartJS.register(
 	CategoryScale,
@@ -41,82 +42,93 @@ export const options = {
 
 export default function BudgetGraph(props) {
 	const [chartData, setChartData] = useState(null);
+	// const [cumulativeData, setCumulativeData] = useState(null);
+	// const [monthlyBudget, setMonthlyBudget] = useState(null);
 
-	const getTransactions = useCallback(async () => {
-		const response = await fetch("/api/get_past_month_transactions", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
-					(account) => account.account_id
-				),
-			}),
-		});
-		const data = await response.json();
+	// const currentDate = new Date();
+	// const daysInMonth = new Date(
+	// 	currentDate.getFullYear(),
+	// 	currentDate.getMonth() + 1,
+	// 	0
+	// ).getDate();
 
-		const currentDate = new Date();
-		const daysInMonth = new Date(
-			currentDate.getFullYear(),
-			currentDate.getMonth() + 1,
-			0
-		).getDate();
-		const cumulativeData = [0];
-		for (var i = 1; i <= currentDate.getDate(); i++) {
-			cumulativeData.push(
-				cumulativeData[i - 1] +
-					data.outgoings
-						.filter((transaction) => {
-							const transactionDate = new Date(transaction.date);
-							return (
-								transactionDate.getDate() === i &&
-								transactionDate.getMonth() ===
-									currentDate.getMonth()
-							);
-						})
-						.reduce(
-							(acc, transaction) => acc + transaction.amount,
-							0
-						)
-			);
-		}
+	// const getTransactions = useCallback(async () => {
+	// 	const response = await fetch("/api/get_past_month_transactions", {
+	// 		method: "POST",
+	// 		body: JSON.stringify({
+	// 			userId: props.userModel.id,
+	// 			activeAccounts: props.activeAccounts.map(
+	// 				(account) => account.account_id
+	// 			),
+	// 		}),
+	// 	});
+	// 	const data = await response.json();
 
-		cumulativeData.shift();
-		const increment =
-			cumulativeData[cumulativeData.length - 1] / currentDate.getDate();
-		for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
-			cumulativeData.push(
-				Math.round((cumulativeData[i - 2] + increment) * 100) / 100
-			);
-		}
+	// 	const cumulativeData = [0];
+	// 	for (var i = 1; i <= currentDate.getDate(); i++) {
+	// 		cumulativeData.push(
+	// 			cumulativeData[i - 1] +
+	// 				data.outgoings
+	// 					.filter((transaction) => {
+	// 						const transactionDate = new Date(transaction.date);
+	// 						return (
+	// 							transactionDate.getDate() === i &&
+	// 							transactionDate.getMonth() ===
+	// 								currentDate.getMonth()
+	// 						);
+	// 					})
+	// 					.reduce(
+	// 						(acc, transaction) => acc + transaction.amount,
+	// 						0
+	// 					)
+	// 		);
+	// 	}
 
-		setChartData({
-			labels: Array.from({ length: daysInMonth }, (_, i) => i + 1),
-			datasets: [
-				{
-					label: "Dataset 1",
-					data: cumulativeData,
-					borderColor: "#fb923c",
-					backgroundColor: "#fb923c",
-				},
-			],
-		});
+	// 	cumulativeData.shift();
+	// 	const increment =
+	// 		cumulativeData[cumulativeData.length - 1] / currentDate.getDate();
+	// 	for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
+	// 		cumulativeData.push(
+	// 			Math.round((cumulativeData[i - 2] + increment) * 100) / 100
+	// 		);
+	// 	}
 
-		console.log(cumulativeData);
-	}, [props.activeAccounts, props.userModel.id]);
+	// 	setCumulativeData(cumulativeData);
+	// }, [currentDate, daysInMonth, props.activeAccounts, props.userModel.id]);
 
-	useEffect(() => {
-		setChartData(null);
-		getTransactions();
-	}, [getTransactions]);
+	// useEffect(() => {
+	// 	setChartData(null);
+	// 	getTransactions();
+	// }, [getTransactions]);
 
-	return (
-		chartData && (
-			<div className="w-[120vh] flex">
-				<div className="w-1/4">test</div>
-				<div className="w-3/4">
-					<Line options={options} data={chartData} />
-				</div>
+	// useEffect(() => {
+	// 	setChartData({
+	// 		labels: Array.from({ length: daysInMonth }, (_, i) => i + 1),
+	// 		datasets: [
+	// 			{
+	// 				label: "Expenditure",
+	// 				data: cumulativeData,
+	// 				borderColor: "#fb923c",
+	// 				backgroundColor: "#fb923c",
+	// 			},
+	// 			{
+	// 				label: "Monthly Budget",
+	// 				data: monthlyBudget,
+	// 				borderColor: "#000000",
+	// 				backgroundColor: "#000000",
+	// 			},
+	// 		],
+	// 	});
+	// }, [cumulativeData, daysInMonth, monthlyBudget]);
+
+	return chartData ? (
+		<div className="w-[120vh] flex">
+			<div className="w-1/4">test</div>
+			<div className="w-3/4">
+				{/* <Line options={options} data={chartData} /> */}
 			</div>
-		)
+		</div>
+	) : (
+		<LoadingIndicator />
 	);
 }
