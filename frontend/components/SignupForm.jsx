@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useState } from "react";
@@ -64,6 +65,11 @@ export default function SignupForm() {
 			<button className="rounded bg-[#fb923c] p-1.5 right-1 text-white">
 				Sign up
 			</button>
+			<div className="flex items-center justify-center">
+				<Link className="p-2" href="/login">
+					Already have an account?
+				</Link>
+			</div>
 		</form>
 	);
 }

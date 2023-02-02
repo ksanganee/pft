@@ -7,7 +7,6 @@ export default function AccountsDropdown(props) {
 	const [accounts, setAccounts] = useState([]);
 	const [dropped, setDropped] = useState(false);
 
-
 	const getAccounts = useCallback(async () => {
 		await fetch("/api/get_accounts", {
 			method: "POST",
@@ -20,7 +19,7 @@ export default function AccountsDropdown(props) {
 				setAccounts(data.accounts);
 				props.setActiveAccounts(data.accounts);
 			});
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.userModel.id, props.setActiveAccounts]);
 
 	useEffect(() => {
