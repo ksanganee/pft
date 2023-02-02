@@ -19,18 +19,23 @@ function groupTransactionsByCategory(array) {
 	}, {});
 }
 
-export default function CategoriesChart(props) {
+export default function CategoriesChart({
+	router,
+	userModel,
+	activeAccounts,
+	...props
+}) {
 	const [outgoings, setOutgoings] = useState([]);
 	const [chartData, setChartData] = useState(null);
 
 	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	const getTransactions = useCallback(async () => {
-		const response = await fetch("/api/get_past_split_transactions", {
+		const res = await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
+				userId: userModel.id,
+				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
 				startDate: new Date(
@@ -40,7 +45,13 @@ export default function CategoriesChart(props) {
 					.slice(0, 10),
 			}),
 		});
-		const data = await response.json();
+
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
+
+		const data = await res.json();
 
 		setOutgoings(data.outgoings);
 
@@ -65,7 +76,7 @@ export default function CategoriesChart(props) {
 				},
 			],
 		});
-	}, [props.activeAccounts, props.userModel.id]);
+	}, [activeAccounts, router, userModel.id]);
 
 	useEffect(() => {
 		setChartData(null);
@@ -73,7 +84,7 @@ export default function CategoriesChart(props) {
 	}, [getTransactions]);
 
 	const accountsMap = new Map(
-		props.activeAccounts.map((account) => [account.account_id, account])
+		activeAccounts.map((account) => [account.account_id, account])
 	);
 
 	return chartData ? (

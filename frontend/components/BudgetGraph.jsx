@@ -30,10 +30,6 @@ const options = {
 		legend: {
 			position: "bottom",
 		},
-		// title: {
-		// 	display: true,
-		// 	text: "Chart.js Line Chart",
-		// },
 	},
 	scales: {
 		y: {
@@ -42,7 +38,12 @@ const options = {
 	},
 };
 
-export default function BudgetGraph(props) {
+export default function BudgetGraph({
+	router,
+	userModel,
+	activeAccounts,
+	...props
+}) {
 	const [chartData, setChartData] = useState(null);
 	const [cumulativeData, setCumulativeData] = useState(null);
 	const [monthlyBudget, setMonthlyBudget] = useState(200);
@@ -100,11 +101,11 @@ export default function BudgetGraph(props) {
 	);
 
 	const getTransactions = useCallback(async () => {
-		await fetch("/api/get_past_split_transactions", {
+		const res = await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
+				userId: userModel.id,
+				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
 				startDate: new Date(
@@ -113,57 +114,51 @@ export default function BudgetGraph(props) {
 					.toISOString()
 					.slice(0, 10),
 			}),
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				const cumulativeData = [0];
-				for (var i = 1; i <= currentDate.getDate(); i++) {
-					cumulativeData.push(
-						cumulativeData[i - 1] +
-							data.outgoings
-								.filter((transaction) => {
-									const transactionDate = new Date(
-										transaction.date
-									);
-									return (
-										transactionDate.getDate() === i &&
-										transactionDate.getMonth() ===
-											currentDate.getMonth()
-									);
-								})
-								.reduce(
-									(acc, transaction) =>
-										Math.round(
-											(acc + transaction.amount) * 100
-										) / 100,
-									0
-								)
-					);
-				}
+		});
 
-				cumulativeData.shift();
-				const increment =
-					cumulativeData[cumulativeData.length - 1] /
-					currentDate.getDate();
-				for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
-					cumulativeData.push(
-						Math.round((cumulativeData[i - 2] + increment) * 100) /
-							100
-					);
-				}
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
 
-				setCumulativeData(cumulativeData);
-				updateChart(cumulativeData, monthlyBudget);
-				console.log(cumulativeData);
-			});
-	}, [
-		currentDate,
-		daysInMonth,
-		// monthlyBudget,
-		props.activeAccounts,
-		props.userModel.id,
-		updateChart,
-	]);
+		const data = await res.json();
+
+		const cumulativeData = [0];
+		for (var i = 1; i <= currentDate.getDate(); i++) {
+			cumulativeData.push(
+				cumulativeData[i - 1] +
+					data.outgoings
+						.filter((transaction) => {
+							const transactionDate = new Date(transaction.date);
+							return (
+								transactionDate.getDate() === i &&
+								transactionDate.getMonth() ===
+									currentDate.getMonth()
+							);
+						})
+						.reduce(
+							(acc, transaction) =>
+								Math.round((acc + transaction.amount) * 100) /
+								100,
+							0
+						)
+			);
+		}
+
+		cumulativeData.shift();
+		const increment =
+			cumulativeData[cumulativeData.length - 1] / currentDate.getDate();
+		for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
+			cumulativeData.push(
+				Math.round((cumulativeData[i - 2] + increment) * 100) / 100
+			);
+		}
+
+		setCumulativeData(cumulativeData);
+		updateChart(cumulativeData, monthlyBudget);
+		console.log(cumulativeData);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentDate, daysInMonth, activeAccounts, userModel.id, updateChart]);
 
 	useEffect(() => {
 		setChartData(null);
@@ -203,12 +198,13 @@ export default function BudgetGraph(props) {
 			</div>
 			<div className="flex justify-center items-center space-x-10 h-[25vh]">
 				<BalancesWidget
-					userModel={props.userModel}
-					activeAccounts={props.activeAccounts}
+					userModel={userModel}
+					activeAccounts={activeAccounts}
 				/>
 				<BudgetCalculator
-					userModel={props.userModel}
-					activeAccounts={props.activeAccounts}
+					router={router}
+					userModel={userModel}
+					activeAccounts={activeAccounts}
 				/>
 			</div>
 		</div>

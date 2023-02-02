@@ -26,7 +26,7 @@ export default function Dashboard() {
 		userModel && (
 			<div className="flex justify-center items-center h-screen">
 				<div className="flex-col text-center">
-					<TabViewer userModel={userModel} />
+					<TabViewer userModel={userModel} router={router} />
 				</div>
 			</div>
 		)

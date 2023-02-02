@@ -5,9 +5,7 @@ import CategoriesChart from "./CategoriesChart";
 import InvestmentsTable from "./InvestmentsTable";
 import BudgetsSection from "./BudgetsSection";
 
-export default function TabViewer(props) {
-	console.log(1);
-
+export default function TabViewer({ router, userModel, ...props }) {
 	const [currentTab, setCurrentTab] = useState(1);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
@@ -16,7 +14,7 @@ export default function TabViewer(props) {
 			name: "Transactions",
 			component: (
 				<TransactionsList
-					userModel={props.userModel}
+					userModel={userModel}
 					activeAccounts={activeAccounts}
 				/>
 			),
@@ -25,7 +23,8 @@ export default function TabViewer(props) {
 			name: "Categories",
 			component: (
 				<CategoriesChart
-					userModel={props.userModel}
+					router={router}
+					userModel={userModel}
 					activeAccounts={activeAccounts}
 				/>
 			),
@@ -34,14 +33,17 @@ export default function TabViewer(props) {
 			name: "Budgets",
 			component: (
 				<BudgetsSection
-					userModel={props.userModel}
+					router={router}
+					userModel={userModel}
 					activeAccounts={activeAccounts}
 				/>
 			),
 		},
 		{
 			name: "Investments",
-			component: <InvestmentsTable userModel={props.userModel} />,
+			component: (
+				<InvestmentsTable router={router} userModel={userModel} />
+			),
 		},
 	];
 
@@ -64,7 +66,7 @@ export default function TabViewer(props) {
 					);
 				})}
 				<AccountsDropdown
-					userModel={props.userModel}
+					userModel={userModel}
 					activeAccounts={activeAccounts}
 					setActiveAccounts={setActiveAccounts}
 				/>

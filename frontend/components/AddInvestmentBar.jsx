@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-export default function AddInvestmentBar(props) {
+export default function AddInvestmentBar({
+	router,
+	userModel,
+	addInvestment,
+	...props
+}) {
 	const [currentTicker, setCurrentTicker] = useState("None");
 	const [currentPrice, setCurrentPrice] = useState("-");
 
@@ -16,14 +21,19 @@ export default function AddInvestmentBar(props) {
 
 	const getPrice = async (ticker) => {
 		if (ticker == "None") return "-";
-		const response = await fetch("/api/get_investment_price", {
+		const res = await fetch("/api/get_investment_price", {
 			method: "POST",
 			body: JSON.stringify({
 				ticker: ticker,
 			}),
 		});
-		const data = await response.json();
-		return data.price;
+
+		if (!res.ok) {
+			router.push("/error");
+		} else {
+			const data = await res.json();
+			return data.price;
+		}
 	};
 
 	return (
@@ -45,16 +55,22 @@ export default function AddInvestmentBar(props) {
 							quantity: quantityInput.value,
 							cost: costInput.value,
 						};
-						const response = await fetch("/api/add_investment", {
+						const res = await fetch("/api/add_investment", {
 							method: "POST",
 							body: JSON.stringify({
-								userId: props.userModel.id,
+								userId: userModel.id,
 								investment: newInvestment,
 							}),
 						});
-						const data = await response.json();
+
+						if (!res.ok) {
+							router.push("/error");
+							return;
+						}
+
+						const data = await res.json();
 						newInvestment.id = data.id;
-						props.addInvestment(newInvestment);
+						addInvestment(newInvestment);
 					} else {
 						if (currentTicker == "None") {
 							document
@@ -102,7 +118,11 @@ export default function AddInvestmentBar(props) {
 								if (price == 0) {
 									setCurrentPrice("-");
 								} else {
-									setCurrentPrice(`$${(Math.round(price * 100) / 100).toFixed(2)}`);
+									setCurrentPrice(
+										`$${(
+											Math.round(price * 100) / 100
+										).toFixed(2)}`
+									);
 								}
 							});
 						}}

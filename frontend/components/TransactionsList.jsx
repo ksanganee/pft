@@ -2,26 +2,33 @@ import { useCallback, useEffect, useState } from "react";
 import TransactionBar from "./TransactionBar";
 import LoadingIndicator from "./LoadingIndicator";
 
-export default function TransactionsList(props) {
+export default function TransactionsList({
+	router,
+	userModel,
+	activeAccounts,
+	...props
+}) {
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
 
 	const getTransactions = useCallback(async () => {
-		await fetch("/api/get_transactions", {
+		const res = await fetch("/api/get_date_grouped_transactions", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
+				userId: userModel.id,
+				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setTransactions(data.transactions);
-				setLoading(false);
-			});
-	}, [props.activeAccounts, props.userModel.id]);
+		});
+
+		if (!res.ok) {
+			router.push("/error");
+		} else {
+			const data = await res.json();
+			setTransactions(data.transactions, setLoading(false));
+		}
+	}, [activeAccounts, router, userModel.id]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -29,7 +36,7 @@ export default function TransactionsList(props) {
 	}, [getTransactions]);
 
 	const accountsMap = new Map(
-		props.activeAccounts.map((account) => [account.account_id, account])
+		activeAccounts.map((account) => [account.account_id, account])
 	);
 
 	return loading ? (
