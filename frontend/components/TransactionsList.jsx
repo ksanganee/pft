@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import TransactionBar from "./TransactionBar";
 import LoadingIndicator from "./LoadingIndicator";
+import TransactionBar from "./TransactionBar";
 
 export default function TransactionsList({
 	router,
