@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 export default function CategoryBar(props) {
-
 	if (!props.transaction || !props.account) return null;
 
 	const uglyDate = new Date(props.transaction.date);
@@ -17,12 +16,14 @@ export default function CategoryBar(props) {
 				<div className="flex items-center">
 					<div className="w-[55px] text-center pr-2">{niceDate}</div>
 					<div className="mr-3">{name}</div>
+					{/* <div className="mr-3 truncate">CREDIT CARD CREDIT CARD CREDIT CARDM CARD</div> */}
 					<div className="text-gray-400">
 						{props.transaction.category}
 					</div>
 				</div>
 				<div className="flex items-center">
-					{props.transaction.amount < 0 ? `+` : `-`}£
+					{/* {props.transaction.amount < 0 ? `+` : `-`}£ */}
+					£
 					{Math.abs(props.transaction.amount)}
 					<Image
 						src={`/${props.account.institution.toLowerCase()}.png`}

@@ -33,7 +33,7 @@ export default function BudgetCalculator(props) {
 	return loading ? (
 		<LoadingIndicator />
 	) : (
-		<div className="flex-col space-y-2 w-[80%] overflow-auto">
+		<div className="flex-col space-y-2 overflow-auto">
 			<div className="mt-5">
 				<input
 					type="number"

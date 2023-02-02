@@ -16,11 +16,17 @@ export default async function GetTransactionsHandler(req, res) {
 	let transactions = [];
 
 	const plaidClient = new PlaidApi({
-		basePath: process.env.ENVIRONMENT === "development" ? PlaidEnvironments.development : PlaidEnvironments.sandbox,
+		basePath:
+			process.env.ENVIRONMENT === "development"
+				? PlaidEnvironments.development
+				: PlaidEnvironments.sandbox,
 		baseOptions: {
 			headers: {
 				"PLAID-CLIENT-ID": process.env.CLIENT_ID,
-				"PLAID-SECRET": process.env.ENVIRONMENT === "development" ? process.env.DEVELOPMENT_SECRET : process.env.SANDBOX_SECRET,
+				"PLAID-SECRET":
+					process.env.ENVIRONMENT === "development"
+						? process.env.DEVELOPMENT_SECRET
+						: process.env.SANDBOX_SECRET,
 			},
 		},
 	});
@@ -32,12 +38,17 @@ export default async function GetTransactionsHandler(req, res) {
 		.then(async (records) => {
 			for (const entry of records) {
 				await plaidClient
-					.transactionsSync({
+					.transactionsGet({
 						access_token: entry.token,
-						cursor: null,
+						start_date: new Date(
+							new Date().setDate(new Date().getDate() - 365)
+						)
+							.toISOString()
+							.split("T")[0],
+						end_date: new Date().toISOString().split("T")[0],
 					})
 					.then(async (response) => {
-						response.data.added.forEach((transaction) => {
+						response.data.transactions.forEach((transaction) => {
 							if (
 								body.activeAccounts.includes(
 									transaction.account_id
@@ -46,7 +57,9 @@ export default async function GetTransactionsHandler(req, res) {
 								transactions.push({
 									account_id: transaction.account_id,
 									amount: transaction.amount,
-									category: transaction.category[0],
+									category: transaction.category
+										? transaction.category[0]
+										: "N/A",
 									date: transaction.date,
 									iso_currency_code:
 										transaction.iso_currency_code,
