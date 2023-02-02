@@ -24,10 +24,10 @@ export default function TransactionsList({
 
 		if (!res.ok) {
 			router.push("/error");
-		} else {
-			const data = await res.json();
-			setTransactions(data.transactions, setLoading(false));
 		}
+
+		const data = await res.json();
+		setTransactions(data.transactions, setLoading(false));
 	}, [activeAccounts, router, userModel.id]);
 
 	useEffect(() => {

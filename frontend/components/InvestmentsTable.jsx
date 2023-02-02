@@ -17,10 +17,11 @@ export default function InvestmentsTable({ router, userModel, ...props }) {
 
 		if (!res.ok) {
 			router.push("/error");
-		} else {
-			const data = await res.json();
-			setInvestments(data.investments, setLoading(false));
+			return;
 		}
+
+		const data = await res.json();
+		setInvestments(data.investments, setLoading(false));
 	}, [router, userModel.id]);
 
 	useEffect(() => {

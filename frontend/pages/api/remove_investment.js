@@ -9,7 +9,6 @@ export default async function RemoveInvestmentHandler(req, res) {
 		await pbClient.records.delete("investments", body.investmentId);
 
 		res.status(200).json({});
-		console.log("Investment removed");
 	} catch (_) {
 		res.status(500).json({
 			error_message: "An error occurred in remove_investment",
