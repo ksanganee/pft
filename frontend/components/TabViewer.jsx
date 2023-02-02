@@ -6,8 +6,6 @@ import InvestmentsTable from "./InvestmentsTable";
 import BudgetsSection from "./BudgetsSection";
 
 export default function TabViewer(props) {
-	console.log(1);
-
 	const [currentTab, setCurrentTab] = useState(1);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 

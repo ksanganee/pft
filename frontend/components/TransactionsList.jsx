@@ -1,40 +1,37 @@
 import { useCallback, useEffect, useState } from "react";
 import TransactionBar from "./TransactionBar";
 import LoadingIndicator from "./LoadingIndicator";
+import useSWR from "swr";
+
+const fetcher = async (url, body) => {
+	const res = await fetch(url, {
+		method: "POST",
+		body: JSON.stringify(body),
+	});
+	return res.json();
+};
 
 export default function TransactionsList(props) {
-	const [transactions, setTransactions] = useState([]);
-	const [loading, setLoading] = useState(true);
-
-	const getTransactions = useCallback(async () => {
-		await fetch("/api/get_transactions", {
-			method: "POST",
-			body: JSON.stringify({
+	const { data, error, isLoading } = useSWR(
+		"/api/get_date_grouped_transactions",
+		(url) =>
+			fetcher(url, {
 				userId: props.userModel.id,
 				activeAccounts: props.activeAccounts.map(
 					(account) => account.account_id
 				),
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setTransactions(data.transactions);
-				setLoading(false);
-			});
-	}, [props.activeAccounts, props.userModel.id]);
-
-	useEffect(() => {
-		setLoading(true);
-		getTransactions();
-	}, [getTransactions]);
+			})
+	);
 
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
 
-	return loading ? (
-		<LoadingIndicator />
-	) : (
+	if (error) return props.router.push("/error");
+
+	if (isLoading) return <LoadingIndicator />;
+
+	return (
 		<div
 			id="transactionsContainer"
 			className="flex-col space-y-4 text-sm w-[80%] bottom-blur overflow-auto no-scrollbar"
@@ -53,7 +50,7 @@ export default function TransactionsList(props) {
 				}
 			}}
 		>
-			{Object.keys(transactions)
+			{Object.keys(data.transactions)
 				.sort()
 				.reverse()
 				.map((date, i) => {
@@ -67,17 +64,19 @@ export default function TransactionsList(props) {
 								{niceDate}
 							</div>
 							<div className="flex-col space-y-1">
-								{transactions[date].map((transaction, j) => {
-									return (
-										<TransactionBar
-											key={j}
-											transaction={transaction}
-											account={accountsMap.get(
-												transaction.account_id
-											)}
-										/>
-									);
-								})}
+								{data.transactions[date].map(
+									(transaction, j) => {
+										return (
+											<TransactionBar
+												key={j}
+												transaction={transaction}
+												account={accountsMap.get(
+													transaction.account_id
+												)}
+											/>
+										);
+									}
+								)}
 							</div>
 						</div>
 					);
