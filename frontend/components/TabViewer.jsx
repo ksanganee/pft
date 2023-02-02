@@ -66,6 +66,7 @@ export default function TabViewer({ router, userModel, ...props }) {
 					);
 				})}
 				<AccountsDropdown
+					router={router}
 					userModel={userModel}
 					activeAccounts={activeAccounts}
 					setActiveAccounts={setActiveAccounts}

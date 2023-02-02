@@ -30,10 +30,11 @@ export default function AddInvestmentBar({
 
 		if (!res.ok) {
 			router.push("/error");
-		} else {
-			const data = await res.json();
-			return data.price;
+			return;
 		}
+
+		const data = await res.json();
+		return data.price;
 	};
 
 	return (
@@ -69,6 +70,7 @@ export default function AddInvestmentBar({
 						}
 
 						const data = await res.json();
+
 						newInvestment.id = data.id;
 						addInvestment(newInvestment);
 					} else {

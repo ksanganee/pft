@@ -4,6 +4,7 @@ import LogoutButton from "./LogoutButton";
 import PlaidLinkButtons from "./PlaidLinkButtons";
 
 export default function AccountsDropdown({
+	router,
 	userModel,
 	activeAccounts,
 	setActiveAccounts,
@@ -13,17 +14,22 @@ export default function AccountsDropdown({
 	const [dropped, setDropped] = useState(false);
 
 	const getAccounts = useCallback(async () => {
-		await fetch("/api/get_accounts", {
+		const res = await fetch("/api/get_accounts", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: userModel.id,
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setAccounts(data.accounts);
-				setActiveAccounts(data.accounts);
-			});
+		});
+
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
+
+		const data = await res.json();
+
+		setAccounts(data.accounts);
+		setActiveAccounts(data.accounts);
 	}, [userModel.id, setActiveAccounts]);
 
 	useEffect(() => {
