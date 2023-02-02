@@ -6,7 +6,9 @@ import InvestmentsTable from "./InvestmentsTable";
 import BudgetsSection from "./BudgetsSection";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(3);
+	console.log(1);
+
+	const [currentTab, setCurrentTab] = useState(1);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
@@ -68,7 +70,7 @@ export default function TabViewer(props) {
 				/>
 			</div>
 			<div className="mt-8 flex justify-center h-[70vh] bg-white rounded max-w-[80vw]">
-				{tabs[currentTab - 1].component}
+				{activeAccounts.length > 0 && tabs[currentTab - 1].component}
 			</div>
 		</>
 	);

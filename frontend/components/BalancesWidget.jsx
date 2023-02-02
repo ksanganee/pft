@@ -48,7 +48,7 @@ export default function BalancesWidget(props) {
 			<LoadingIndicator small={true} />
 		</div>
 	) : (
-		<div className="flex-col space-y-2 text-sm overflow-auto mb-20">
+		<div className="flex-col space-y-2 overflow-auto">
 			{balances.map((balance, i) => {
 				return (
 					<div key={i}>

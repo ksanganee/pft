@@ -2,6 +2,8 @@ import { PlaidApi, PlaidEnvironments } from "plaid";
 import PocketBase from "pocketbase";
 
 export default async function GetPastMonthTransactionsHandler(req, res) {
+	console.log(3);
+
 	const body = JSON.parse(req.body);
 
 	const pbClient = new PocketBase("http://127.0.0.1:8090");
@@ -10,11 +12,17 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 	let outgoings = [];
 
 	const plaidClient = new PlaidApi({
-		basePath: process.env.ENVIRONMENT === "development" ? PlaidEnvironments.development : PlaidEnvironments.sandbox,
+		basePath:
+			process.env.ENVIRONMENT === "development"
+				? PlaidEnvironments.development
+				: PlaidEnvironments.sandbox,
 		baseOptions: {
 			headers: {
 				"PLAID-CLIENT-ID": process.env.CLIENT_ID,
-				"PLAID-SECRET": process.env.ENVIRONMENT === "development" ? process.env.DEVELOPMENT_SECRET : process.env.SANDBOX_SECRET,
+				"PLAID-SECRET":
+					process.env.ENVIRONMENT === "development"
+						? process.env.DEVELOPMENT_SECRET
+						: process.env.SANDBOX_SECRET,
 			},
 		},
 	});
@@ -33,6 +41,7 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 						)
 							.toISOString()
 							.split("T")[0],
+						// end_date: '2023-01-27',
 						end_date: new Date().toISOString().split("T")[0],
 					})
 					.then(async (response) => {
@@ -46,7 +55,9 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 									incomings.push({
 										account_id: transaction.account_id,
 										amount: transaction.amount,
-										category: transaction.category[0],
+										category: transaction.category
+											? transaction.category[0]
+											: "N/A",
 										date: transaction.date,
 										iso_currency_code:
 											transaction.iso_currency_code,
@@ -58,7 +69,9 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 									outgoings.push({
 										account_id: transaction.account_id,
 										amount: transaction.amount,
-										category: transaction.category[0],
+										category: transaction.category
+											? transaction.category[0]
+											: "N/A",
 										date: transaction.date,
 										iso_currency_code:
 											transaction.iso_currency_code,

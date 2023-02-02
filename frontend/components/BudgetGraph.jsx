@@ -8,9 +8,11 @@ import {
 	Title,
 	Tooltip,
 } from "chart.js";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import LoadingIndicator from "./LoadingIndicator";
+import BudgetCalculator from "./BudgetCalculator";
+import BalancesWidget from "./BalancesWidget";
 
 ChartJS.register(
 	CategoryScale,
@@ -22,16 +24,16 @@ ChartJS.register(
 	Legend
 );
 
-export const options = {
+const options = {
 	responsive: true,
 	plugins: {
 		legend: {
-			position: "top",
+			position: "bottom",
 		},
-		title: {
-			display: true,
-			text: "Chart.js Line Chart",
-		},
+		// title: {
+		// 	display: true,
+		// 	text: "Chart.js Line Chart",
+		// },
 	},
 	scales: {
 		y: {
@@ -42,90 +44,170 @@ export const options = {
 
 export default function BudgetGraph(props) {
 	const [chartData, setChartData] = useState(null);
-	// const [cumulativeData, setCumulativeData] = useState(null);
-	// const [monthlyBudget, setMonthlyBudget] = useState(null);
+	const [cumulativeData, setCumulativeData] = useState(null);
+	const [monthlyBudget, setMonthlyBudget] = useState(200);
 
-	// const currentDate = new Date();
-	// const daysInMonth = new Date(
-	// 	currentDate.getFullYear(),
-	// 	currentDate.getMonth() + 1,
-	// 	0
-	// ).getDate();
+	// const currentDate = useMemo(() => new Date("2023-01-27"), []);
+	const currentDate = useMemo(() => new Date(), []);
+	const daysInMonth = new Date(
+		currentDate.getFullYear(),
+		currentDate.getMonth() + 1,
+		0
+	).getDate();
 
-	// const getTransactions = useCallback(async () => {
-	// 	const response = await fetch("/api/get_past_month_transactions", {
-	// 		method: "POST",
-	// 		body: JSON.stringify({
-	// 			userId: props.userModel.id,
-	// 			activeAccounts: props.activeAccounts.map(
-	// 				(account) => account.account_id
-	// 			),
-	// 		}),
-	// 	});
-	// 	const data = await response.json();
+	const updateChart = useCallback(
+		(expenditureData, maxMonthlyBudget) => {
+			setChartData({
+				labels: Array.from({ length: daysInMonth }, (_, i) => i + 1),
+				datasets: [
+					{
+						label: "Monthly Budget",
+						data: Array.from(
+							{ length: daysInMonth },
+							() => maxMonthlyBudget
+						),
+						borderColor: "#FF6666",
+						backgroundColor: "#FF6666",
+						pointRadius: 0,
+					},
+					{
+						label: "Expenditure",
+						data: Array.from({ length: daysInMonth }, (_, i) =>
+							i < currentDate.getDate()
+								? expenditureData[i]
+								: null
+						),
+						borderColor: "#fb923c",
+						backgroundColor: "#fb923c",
+						pointRadius: 0,
+					},
+					{
+						label: "Predicted",
+						data: Array.from({ length: daysInMonth }, (_, i) =>
+							i < currentDate.getDate() - 1
+								? null
+								: expenditureData[i]
+						),
+						borderColor: "#fb923c",
+						backgroundColor: "#fb923c",
+						borderDash: [3, 3],
+						pointRadius: 0,
+					},
+				],
+			});
+		},
+		[currentDate, daysInMonth]
+	);
 
-	// 	const cumulativeData = [0];
-	// 	for (var i = 1; i <= currentDate.getDate(); i++) {
-	// 		cumulativeData.push(
-	// 			cumulativeData[i - 1] +
-	// 				data.outgoings
-	// 					.filter((transaction) => {
-	// 						const transactionDate = new Date(transaction.date);
-	// 						return (
-	// 							transactionDate.getDate() === i &&
-	// 							transactionDate.getMonth() ===
-	// 								currentDate.getMonth()
-	// 						);
-	// 					})
-	// 					.reduce(
-	// 						(acc, transaction) => acc + transaction.amount,
-	// 						0
-	// 					)
-	// 		);
-	// 	}
+	const getTransactions = useCallback(async () => {
+		await fetch("/api/get_past_month_transactions", {
+			method: "POST",
+			body: JSON.stringify({
+				userId: props.userModel.id,
+				activeAccounts: props.activeAccounts.map(
+					(account) => account.account_id
+				),
+			}),
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				const cumulativeData = [0];
+				for (var i = 1; i <= currentDate.getDate(); i++) {
+					cumulativeData.push(
+						cumulativeData[i - 1] +
+							data.outgoings
+								.filter((transaction) => {
+									const transactionDate = new Date(
+										transaction.date
+									);
+									return (
+										transactionDate.getDate() === i &&
+										transactionDate.getMonth() ===
+											currentDate.getMonth()
+									);
+								})
+								.reduce(
+									(acc, transaction) =>
+										Math.round(
+											(acc + transaction.amount) * 100
+										) / 100,
+									0
+								)
+					);
+				}
 
-	// 	cumulativeData.shift();
-	// 	const increment =
-	// 		cumulativeData[cumulativeData.length - 1] / currentDate.getDate();
-	// 	for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
-	// 		cumulativeData.push(
-	// 			Math.round((cumulativeData[i - 2] + increment) * 100) / 100
-	// 		);
-	// 	}
+				cumulativeData.shift();
+				const increment =
+					cumulativeData[cumulativeData.length - 1] /
+					currentDate.getDate();
+				for (var i = currentDate.getDate() + 1; i <= daysInMonth; i++) {
+					cumulativeData.push(
+						Math.round((cumulativeData[i - 2] + increment) * 100) /
+							100
+					);
+				}
 
-	// 	setCumulativeData(cumulativeData);
-	// }, [currentDate, daysInMonth, props.activeAccounts, props.userModel.id]);
+				setCumulativeData(cumulativeData);
+				updateChart(cumulativeData, monthlyBudget);
+				console.log(cumulativeData);
+			});
+	}, [
+		currentDate,
+		daysInMonth,
+		// monthlyBudget,
+		props.activeAccounts,
+		props.userModel.id,
+		updateChart,
+	]);
 
-	// useEffect(() => {
-	// 	setChartData(null);
-	// 	getTransactions();
-	// }, [getTransactions]);
-
-	// useEffect(() => {
-	// 	setChartData({
-	// 		labels: Array.from({ length: daysInMonth }, (_, i) => i + 1),
-	// 		datasets: [
-	// 			{
-	// 				label: "Expenditure",
-	// 				data: cumulativeData,
-	// 				borderColor: "#fb923c",
-	// 				backgroundColor: "#fb923c",
-	// 			},
-	// 			{
-	// 				label: "Monthly Budget",
-	// 				data: monthlyBudget,
-	// 				borderColor: "#000000",
-	// 				backgroundColor: "#000000",
-	// 			},
-	// 		],
-	// 	});
-	// }, [cumulativeData, daysInMonth, monthlyBudget]);
+	useEffect(() => {
+		setChartData(null);
+		getTransactions();
+	}, [getTransactions]);
 
 	return chartData ? (
-		<div className="w-[120vh] flex">
-			<div className="w-1/4">test</div>
-			<div className="w-3/4">
-				{/* <Line options={options} data={chartData} /> */}
+		<div id="">
+			<div
+				id=""
+				className="w-[120vh] flex items-center h-[45vh]"
+			>
+				<div className="w-1/4">
+					<input
+						type="number"
+						id="monthly_budget_input"
+						className="bg-gray-50 text-gray-500 rounded pl-[13px] text-center outline-none p-1 peer focus:ring-[#fb923c] focus:ring-2 focus:ring-opacity-50 focus:text-gray-700"
+						value={monthlyBudget}
+						onChange={(e) => {
+							if (e.target.value < 0) {
+								document.getElementById(
+									"monthly_budget_input"
+								).value = 0;
+							} else {
+								setMonthlyBudget(e.target.value);
+								updateChart(cumulativeData, e.target.value);
+							}
+						}}
+					/>
+					<label
+						htmlFor="monthly_budget_input"
+						className="absolute text-sm text-gray-500 -translate-y-6 -translate-x-[150px] peer-focus:text-gray-700"
+					>
+						Monthly budget
+					</label>
+				</div>
+				<div className="w-3/4">
+					<Line options={options} data={chartData} />
+				</div>
+			</div>
+			<div className="flex justify-center items-center space-x-10 h-[25vh]">
+				<BalancesWidget
+					userModel={props.userModel}
+					activeAccounts={props.activeAccounts}
+				/>
+				<BudgetCalculator
+					userModel={props.userModel}
+					activeAccounts={props.activeAccounts}
+				/>
 			</div>
 		</div>
 	) : (
