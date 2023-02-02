@@ -1,17 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
 
-export default function BudgetCalculator(props) {
+export default function BudgetCalculator({
+	router,
+	userModel,
+	activeAccounts,
+	...props
+}) {
 	const [loading, setLoading] = useState(true);
 	const [income, setIncome] = useState(0);
 
 	const getIncome = useCallback(async () => {
 		setLoading(true);
-		await fetch("/api/get_past_split_transactions", {
+		const res = await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
-				activeAccounts: props.activeAccounts.map(
+				userId: userModel.id,
+				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
 				startDate: new Date(
@@ -20,16 +25,21 @@ export default function BudgetCalculator(props) {
 					.toISOString()
 					.slice(0, 10),
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				let predictedIncome = 0;
-				for (let i = 0; i < data.incomings.length; i++) {
-					predictedIncome += -1 * data.incomings[i].amount;
-				}
-				setIncome(Math.round(predictedIncome), setLoading(false));
-			});
-	}, [props.activeAccounts, props.userModel.id]);
+		});
+
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
+
+		const data = await res.json();
+
+		let predictedIncome = 0;
+		for (let i = 0; i < data.incomings.length; i++) {
+			predictedIncome += -1 * data.incomings[i].amount;
+		}
+		setIncome(Math.round(predictedIncome), setLoading(false));
+	}, [activeAccounts, router, userModel.id]);
 
 	useEffect(() => {
 		getIncome();

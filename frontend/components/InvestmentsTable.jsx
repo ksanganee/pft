@@ -3,27 +3,25 @@ import LoadingIndicator from "./LoadingIndicator";
 import AddInvestmentBar from "./AddInvestmentBar";
 import InvestmentTableRow from "./InvestmentTableRow";
 
-export default function InvestmentsTable(props) {
+export default function InvestmentsTable({ router, userModel, ...props }) {
 	const [investments, setInvestments] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const addInvestment = useCallback((investment) => {
-		setInvestments((prevInvestments) => {
-			return [...prevInvestments, investment];
-		});
-	}, []);
-
 	const getInvestments = useCallback(async () => {
-		const response = await fetch("/api/get_investments", {
+		const res = await fetch("/api/get_investments", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
+				userId: userModel.id,
 			}),
 		});
-		const data = await response.json();
-		setInvestments(data.investments);
-		setLoading(false);
-	}, [props.userModel.id]);
+
+		if (!res.ok) {
+			router.push("/error");
+		} else {
+			const data = await res.json();
+			setInvestments(data.investments, setLoading(false));
+		}
+	}, [router, userModel.id]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -60,6 +58,7 @@ export default function InvestmentsTable(props) {
 					{investments.map((investment, i) => {
 						return (
 							<InvestmentTableRow
+								router={router}
 								key={i}
 								investment={investment}
 								investments={investments}
@@ -70,8 +69,14 @@ export default function InvestmentsTable(props) {
 				</div>
 			</div>
 			<AddInvestmentBar
-				addInvestment={addInvestment}
-				userModel={props.userModel}
+				router={router}
+				userModel={userModel}
+				addInvestment={(newInvestment) =>
+					setInvestments((prevInvestments) => [
+						...prevInvestments,
+						newInvestment,
+					])
+				}
 			/>
 		</div>
 	);

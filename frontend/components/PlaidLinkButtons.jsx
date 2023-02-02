@@ -1,38 +1,44 @@
-import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { usePlaidLink } from "react-plaid-link";
 
-export default function PlaidLinkButtons(props) {
-	let router = useRouter();
-
+export default function PlaidLinkButtons({
+	router,
+	userModel,
+	refresh,
+	...props
+}) {
 	const [token, setToken] = useState("");
 
 	const createLinkToken = useCallback(async () => {
-		await fetch("/api/create_link_token", {
+		const res = await fetch("/api/create_link_token", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
+				userId: userModel.id,
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setToken(data.link_token);
-			});
-	}, [props.userModel.id]);
+		});
+
+		const data = await res.json();
+
+		setToken(data.link_token);
+	}, [userModel.id]);
 
 	const linkSuccessCallback = useCallback(
 		async (publicToken, _) => {
-			await fetch("/api/send_public_token", {
+			const res = await fetch("/api/send_public_token", {
 				method: "POST",
 				body: JSON.stringify({
 					publicToken,
-					userId: props.userModel.id,
+					userId: userModel.id,
 				}),
-			}).then((_) => {
-				props.refresh();
 			});
+
+			if (!res.ok) {
+				router.push("/error");
+			} else {
+				refresh();
+			}
 		},
-		[props]
+		[refresh, router, userModel.id]
 	);
 
 	const linkErrorCallback = useCallback(

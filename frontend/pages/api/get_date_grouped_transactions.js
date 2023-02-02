@@ -1,7 +1,14 @@
 import { PlaidApi, PlaidEnvironments } from "plaid";
 import PocketBase from "pocketbase";
 
-export default async function GetPastSplitTransactionsHandler(req, res) {
+var groupBy = function (xs, key) {
+	return xs.reduce(function (rv, x) {
+		(rv[x[key]] = rv[x[key]] || []).push(x);
+		return rv;
+	}, {});
+};
+
+export default async function GetDateGroupedTransactionsHandler(req, res) {
 	try {
 		const body = JSON.parse(req.body);
 
@@ -23,23 +30,25 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 			},
 		});
 
-		const incomings = [];
-		const outgoings = [];
+		let transactions = [];
 
 		const records_res = await pbClient.records.getFullList("tokens", 200, {
 			filter: `user = '${body.userId}'`,
 		});
 
 		for (const entry of records_res) {
-			const transactions_res = await plaidClient.transactionsGet({
+			const transaction_list_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
-				start_date: body.startDate,
-				// end_date: '2023-01-27',
-				end_date: new Date().toISOString().slice(0, 10),
+				start_date: new Date(
+					new Date().setDate(new Date().getDate() - 365)
+				)
+					.toISOString()
+					.split("T")[0],
+				end_date: new Date().toISOString().split("T")[0],
 			});
-			transactions_res.data.transactions.forEach((transaction) => {
+			transaction_list_res.data.transactions.forEach((transaction) => {
 				if (body.activeAccounts.includes(transaction.account_id)) {
-					const newTransaction = {
+					transactions.push({
 						account_id: transaction.account_id,
 						amount: transaction.amount,
 						category: transaction.category
@@ -49,28 +58,16 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						iso_currency_code: transaction.iso_currency_code,
 						merchant_name: transaction.merchant_name,
 						name: transaction.name,
-					};
-					if (transaction.amount < 0) {
-						incomings.push(newTransaction);
-					} else {
-						outgoings.push(newTransaction);
-					}
+					});
 				}
 			});
 		}
 
-		incomings.sort((a, b) => {
-			return new Date(b.date) - new Date(a.date);
-		});
-
-		outgoings.sort((a, b) => {
-			return new Date(b.date) - new Date(a.date);
-		});
-
-		res.status(200).json({ incomings, outgoings });
+		transactions = groupBy(transactions, "date");
+		res.status(200).json({ transactions });
 	} catch (_) {
 		res.status(500).json({
-			error_message: "An error occurred in get_past_month_transactions",
+			error_message: "An error occurred in get_date_grouped_transactions",
 		});
 	}
 }

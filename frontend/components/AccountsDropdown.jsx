@@ -109,6 +109,7 @@ export default function AccountsDropdown(props) {
 						);
 					})}
 					<PlaidLinkButtons
+						router={props.router}
 						userModel={props.userModel}
 						refresh={getAccounts}
 					/>
