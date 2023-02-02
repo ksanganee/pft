@@ -6,7 +6,7 @@ import InvestmentsTable from "./InvestmentsTable";
 import BudgetsSection from "./BudgetsSection";
 
 export default function TabViewer(props) {
-	const [currentTab, setCurrentTab] = useState(1);
+	const [currentTab, setCurrentTab] = useState(3);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [
@@ -24,6 +24,7 @@ export default function TabViewer(props) {
 			name: "Categories",
 			component: (
 				<CategoriesChart
+					router={props.router}
 					userModel={props.userModel}
 					activeAccounts={activeAccounts}
 				/>
@@ -33,6 +34,7 @@ export default function TabViewer(props) {
 			name: "Budgets",
 			component: (
 				<BudgetsSection
+					router={props.router}
 					userModel={props.userModel}
 					activeAccounts={activeAccounts}
 				/>
@@ -40,7 +42,7 @@ export default function TabViewer(props) {
 		},
 		{
 			name: "Investments",
-			component: <InvestmentsTable userModel={props.userModel} />,
+			component: <InvestmentsTable router={props.router} userModel={props.userModel} />,
 		},
 	];
 

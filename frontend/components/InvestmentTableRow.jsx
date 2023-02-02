@@ -63,10 +63,8 @@ export default function InvestmentTableRow(props) {
 					</div>
 				) : props.investment.profit >= 10 ? (
 					`${props.investment.profit.toFixed(1)}%`
-				) : props.investment.profit ? (
-					`${props.investment.profit.toPrecision(2)}%`
 				) : (
-					"0%"
+					`${props.investment.profit.toPrecision(2)}%`
 				)}
 			</div>
 			<div className="flex justify-center items-center w-[50px] text-gray-500">

@@ -7,6 +7,7 @@ export default function BudgetsSection(props) {
 		<>
 			{/* <BalancesWidget userModel={props.userModel} activeAccounts={props.activeAccounts} /> */}
 			<BudgetGraph
+				router={props.router}
 				userModel={props.userModel}
 				activeAccounts={props.activeAccounts}
 			/>

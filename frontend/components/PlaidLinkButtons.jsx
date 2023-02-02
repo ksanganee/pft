@@ -22,17 +22,17 @@ export default function PlaidLinkButtons(props) {
 
 	const linkSuccessCallback = useCallback(
 		async (publicToken, _) => {
-			await fetch("/api/send_public_token", {
+			const res = await fetch("/api/send_public_token", {
 				method: "POST",
 				body: JSON.stringify({
 					publicToken,
 					userId: props.userModel.id,
 				}),
-			}).then((_) => {
-				props.refresh();
 			});
+
+			res.status == 200 ? props.refresh() : router.push("/error");
 		},
-		[props]
+		[props, router]
 	);
 
 	const linkErrorCallback = useCallback(

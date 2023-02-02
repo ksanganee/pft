@@ -65,8 +65,7 @@ export default async function GetTransactionsHandler(req, res) {
 
 		transactions = groupBy(transactions, "date");
 		res.status(200).json({ transactions });
-	} catch (err) {
-		console.log(err);
+	} catch (_) {
 		res.status(500).json({
 			error_message: "An error occurred in get_date_grouped_transactions",
 		});

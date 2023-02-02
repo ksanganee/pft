@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import CategoryBar from "./CategoryBar";
 import LoadingIndicator from "./LoadingIndicator";
+import useSWR from "swr";
+import { fetcher } from "../utils/fetcher";
 
 function makeColor(colorNum, colors) {
 	if (colors < 1) colors = 1;
@@ -19,16 +20,21 @@ function groupTransactionsByCategory(array) {
 	}, {});
 }
 
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const options = {
+	plugins: {
+		legend: {
+			position: "bottom",
+		},
+	},
+};
+
 export default function CategoriesChart(props) {
-	const [outgoings, setOutgoings] = useState([]);
-	const [chartData, setChartData] = useState(null);
-
-	ChartJS.register(ArcElement, Tooltip, Legend);
-
-	const getTransactions = useCallback(async () => {
-		const response = await fetch("/api/get_past_split_transactions", {
-			method: "POST",
-			body: JSON.stringify({
+	const { data, error, isLoading } = useSWR(
+		"/api/get_past_split_transactions",
+		(url) =>
+			fetcher(url, {
 				userId: props.userModel.id,
 				activeAccounts: props.activeAccounts.map(
 					(account) => account.account_id
@@ -38,64 +44,53 @@ export default function CategoriesChart(props) {
 				)
 					.toISOString()
 					.slice(0, 10),
-			}),
-		});
-		const data = await response.json();
+			})
+	);
 
-		setOutgoings(data.outgoings);
+	if (error) {
+		props.router.push("/error");
+		return null;
+	}
 
-		const groups = groupTransactionsByCategory(data.outgoings);
+	if (isLoading) return <LoadingIndicator />;
 
-		setChartData({
-			labels: Object.keys(groups),
-			datasets: [
-				{
-					label: " Total spent (£)",
-					data: Object.values(groups),
-					backgroundColor: Object.values(groups).map((_, i) => {
-						return `hsl(${makeColor(
-							i,
-							Object.keys(groups).length
-						)}, 100%, 70%)`;
-					}),
-					borderWidth: 5,
-					borderRadius: 15,
-					hoverBorderWidth: 5,
-					borderJoinStyle: "round",
-				},
-			],
-		});
-	}, [props.activeAccounts, props.userModel.id]);
+	const groups = groupTransactionsByCategory(data.outgoings);
 
-	useEffect(() => {
-		setChartData(null);
-		getTransactions();
-	}, [getTransactions]);
+	const chartData = {
+		labels: Object.keys(groups),
+		datasets: [
+			{
+				label: " Total spent (£)",
+				data: Object.values(groups),
+				backgroundColor: Object.values(groups).map((_, i) => {
+					return `hsl(${makeColor(
+						i,
+						Object.keys(groups).length
+					)}, 100%, 70%)`;
+				}),
+				borderWidth: 5,
+				borderRadius: 15,
+				hoverBorderWidth: 5,
+				borderJoinStyle: "round",
+			},
+		],
+	};
 
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
 
-	return chartData ? (
+	return (
 		<div className="flex-col w-[120vh] space-y-6">
 			<div className="text-base">
 				Previous 30 days expenditure by category
 			</div>
 			<div className="flex w-[120vh] justify-center space-x-3">
 				<div className="w-[60vh]">
-					<Pie
-						data={chartData}
-						options={{
-							plugins: {
-								legend: {
-									position: "bottom",
-								},
-							},
-						}}
-					/>
+					<Pie data={chartData} options={options} />
 				</div>
 				<div className="flex-col space-y-2 text-sm overflow-auto max-h-[60vh] w-[60vh]">
-					{outgoings.map((transaction, i) => (
+					{data.outgoings.map((transaction, i) => (
 						<CategoryBar
 							key={i}
 							transaction={transaction}
@@ -105,7 +100,5 @@ export default function CategoriesChart(props) {
 				</div>
 			</div>
 		</div>
-	) : (
-		<LoadingIndicator />
 	);
 }

@@ -45,16 +45,20 @@ export default function AddInvestmentBar(props) {
 							quantity: quantityInput.value,
 							cost: costInput.value,
 						};
-						const response = await fetch("/api/add_investment", {
+						const res = await fetch("/api/add_investment", {
 							method: "POST",
 							body: JSON.stringify({
 								userId: props.userModel.id,
 								investment: newInvestment,
 							}),
 						});
-						const data = await response.json();
-						newInvestment.id = data.id;
-						props.addInvestment(newInvestment);
+						if (res.status != 200) {
+							props.router.push("/error");
+						} else {
+							const data = await res.json();
+							newInvestment.id = data.id;
+							props.addInvestment(newInvestment);
+						}
 					} else {
 						if (currentTicker == "None") {
 							document
@@ -102,7 +106,11 @@ export default function AddInvestmentBar(props) {
 								if (price == 0) {
 									setCurrentPrice("-");
 								} else {
-									setCurrentPrice(`$${(Math.round(price * 100) / 100).toFixed(2)}`);
+									setCurrentPrice(
+										`$${(
+											Math.round(price * 100) / 100
+										).toFixed(2)}`
+									);
 								}
 							});
 						}}

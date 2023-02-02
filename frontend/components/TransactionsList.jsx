@@ -4,7 +4,6 @@ import LoadingIndicator from "./LoadingIndicator";
 import useSWR from "swr";
 import { fetcher } from "../utils/fetcher";
 
-
 export default function TransactionsList(props) {
 	const { data, error, isLoading } = useSWR(
 		"/api/get_date_grouped_transactions",
@@ -17,17 +16,16 @@ export default function TransactionsList(props) {
 			})
 	);
 
+	if (error) {
+		props.router.push("/error");
+		return null;
+	}
+
+	if (isLoading) return <LoadingIndicator />;
+
 	const accountsMap = new Map(
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
-
-	if (error) {
-		// console.error(error);
-		props.router.push("/error");
-		return null;
-	} 
-
-	if (isLoading) return <LoadingIndicator />;
 
 	return (
 		<div

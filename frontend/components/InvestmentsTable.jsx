@@ -2,10 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
 import AddInvestmentBar from "./AddInvestmentBar";
 import InvestmentTableRow from "./InvestmentTableRow";
+import useSWR from "swr";
+import { fetcher } from "../utils/fetcher";
 
 export default function InvestmentsTable(props) {
 	const [investments, setInvestments] = useState([]);
-	const [loading, setLoading] = useState(true);
+
+	const { data, error, isLoading } = useSWR("/api/get_investments", (url) =>
+		fetcher(url, {
+			userId: props.userModel.id,
+		})
+	);
 
 	const addInvestment = useCallback((investment) => {
 		setInvestments((prevInvestments) => {
@@ -13,26 +20,20 @@ export default function InvestmentsTable(props) {
 		});
 	}, []);
 
-	const getInvestments = useCallback(async () => {
-		const response = await fetch("/api/get_investments", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: props.userModel.id,
-			}),
-		});
-		const data = await response.json();
-		setInvestments(data.investments);
-		setLoading(false);
-	}, [props.userModel.id]);
-
 	useEffect(() => {
-		setLoading(true);
-		getInvestments();
-	}, [getInvestments]);
+		if (data && data.investments) {
+			setInvestments(data.investments);
+		}
+	}, [data]);
 
-	return loading ? (
-		<LoadingIndicator />
-	) : (
+	if (error) {
+		props.router.push("/error");
+		return null;
+	}
+
+	if (isLoading) return <LoadingIndicator />;
+
+	return (
 		<div>
 			<div className="text-sm overflow-auto max-h-[356px] mb-5 curved-table-header">
 				<div className="text-gray-700 bg-gray-200 flex">
@@ -60,6 +61,7 @@ export default function InvestmentsTable(props) {
 					{investments.map((investment, i) => {
 						return (
 							<InvestmentTableRow
+								router={props.router}
 								key={i}
 								investment={investment}
 								investments={investments}
@@ -70,6 +72,7 @@ export default function InvestmentsTable(props) {
 				</div>
 			</div>
 			<AddInvestmentBar
+				router={props.router}
 				addInvestment={addInvestment}
 				userModel={props.userModel}
 			/>
