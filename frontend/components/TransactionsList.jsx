@@ -2,14 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import TransactionBar from "./TransactionBar";
 import LoadingIndicator from "./LoadingIndicator";
 import useSWR from "swr";
+import { fetcher } from "../utils/fetcher";
 
-const fetcher = async (url, body) => {
-	const res = await fetch(url, {
-		method: "POST",
-		body: JSON.stringify(body),
-	});
-	return res.json();
-};
 
 export default function TransactionsList(props) {
 	const { data, error, isLoading } = useSWR(
@@ -27,7 +21,11 @@ export default function TransactionsList(props) {
 		props.activeAccounts.map((account) => [account.account_id, account])
 	);
 
-	if (error) return props.router.push("/error");
+	if (error) {
+		// console.error(error);
+		props.router.push("/error");
+		return null;
+	} 
 
 	if (isLoading) return <LoadingIndicator />;
 
