@@ -100,13 +100,18 @@ export default function BudgetGraph(props) {
 	);
 
 	const getTransactions = useCallback(async () => {
-		await fetch("/api/get_past_month_transactions", {
+		await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: props.userModel.id,
 				activeAccounts: props.activeAccounts.map(
 					(account) => account.account_id
 				),
+				startDate: new Date(
+					new Date().setDate(new Date().getDate() - 30)
+				)
+					.toISOString()
+					.slice(0, 10),
 			}),
 		})
 			.then((response) => response.json())
@@ -167,10 +172,7 @@ export default function BudgetGraph(props) {
 
 	return chartData ? (
 		<div id="">
-			<div
-				id=""
-				className="w-[120vh] flex items-center h-[45vh]"
-			>
+			<div id="" className="w-[120vh] flex items-center h-[45vh]">
 				<div className="w-1/4">
 					<input
 						type="number"
