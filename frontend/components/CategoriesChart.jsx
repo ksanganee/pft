@@ -26,13 +26,18 @@ export default function CategoriesChart(props) {
 	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	const getTransactions = useCallback(async () => {
-		const response = await fetch("/api/get_past_month_transactions", {
+		const response = await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: props.userModel.id,
 				activeAccounts: props.activeAccounts.map(
 					(account) => account.account_id
 				),
+				startDate: new Date(
+					new Date().setDate(new Date().getDate() - 30)
+				)
+					.toISOString()
+					.slice(0, 10),
 			}),
 		});
 		const data = await response.json();
@@ -73,7 +78,9 @@ export default function CategoriesChart(props) {
 
 	return chartData ? (
 		<div className="flex-col w-[120vh] space-y-6">
-			<div className="text-base">Previous 30 days expenditure by category</div>
+			<div className="text-base">
+				Previous 30 days expenditure by category
+			</div>
 			<div className="flex w-[120vh] justify-center space-x-3">
 				<div className="w-[60vh]">
 					<Pie

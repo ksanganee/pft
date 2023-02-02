@@ -7,13 +7,18 @@ export default function BudgetCalculator(props) {
 
 	const getIncome = useCallback(async () => {
 		setLoading(true);
-		await fetch("/api/get_past_month_transactions", {
+		await fetch("/api/get_past_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: props.userModel.id,
 				activeAccounts: props.activeAccounts.map(
 					(account) => account.account_id
 				),
+				startDate: new Date(
+					new Date().setDate(new Date().getDate() - 30)
+				)
+					.toISOString()
+					.slice(0, 10),
 			}),
 		})
 			.then((res) => res.json())

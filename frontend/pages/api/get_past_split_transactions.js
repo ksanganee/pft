@@ -36,13 +36,9 @@ export default async function GetPastMonthTransactionsHandler(req, res) {
 				await plaidClient
 					.transactionsGet({
 						access_token: entry.token,
-						start_date: new Date(
-							new Date().setDate(new Date().getDate() - 30)
-						)
-							.toISOString()
-							.split("T")[0],
+						start_date: body.startDate,
 						// end_date: '2023-01-27',
-						end_date: new Date().toISOString().split("T")[0],
+						end_date: new Date().toISOString().slice(0, 10),
 					})
 					.then(async (response) => {
 						response.data.transactions.forEach((transaction) => {
