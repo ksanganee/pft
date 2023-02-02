@@ -2,10 +2,12 @@ import { useState } from "react";
 import AccountsDropdown from "./AccountsDropdown";
 import TransactionsList from "./TransactionsList";
 import CategoriesChart from "./CategoriesChart";
-import LoadingIndicator from "./LoadingIndicator";
 import InvestmentsTable from "./InvestmentsTable";
+import BudgetsSection from "./BudgetsSection";
 
 export default function TabViewer(props) {
+	console.log(1);
+
 	const [currentTab, setCurrentTab] = useState(1);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
@@ -30,7 +32,12 @@ export default function TabViewer(props) {
 		},
 		{
 			name: "Budgets",
-			component: <div>Tab 3</div>,
+			component: (
+				<BudgetsSection
+					userModel={props.userModel}
+					activeAccounts={activeAccounts}
+				/>
+			),
 		},
 		{
 			name: "Investments",
@@ -40,7 +47,7 @@ export default function TabViewer(props) {
 
 	return (
 		<>
-			<div className="flex text-gray-500 justify-center">
+			<div className="flex text-gray-700 justify-center">
 				{tabs.map((tab, i) => {
 					return (
 						<div
@@ -63,29 +70,8 @@ export default function TabViewer(props) {
 				/>
 			</div>
 			<div className="mt-8 flex justify-center h-[70vh] bg-white rounded max-w-[80vw]">
-				{tabs[currentTab - 1].component}
+				{activeAccounts.length > 0 && tabs[currentTab - 1].component}
 			</div>
 		</>
 	);
-}
-
-{
-	/* <>
-	{tab === 1 && (
-		<TransactionsList
-			userModel={props.userModel}
-			activeAccounts={activeAccounts}
-		/>
-	)}
-	{tab === 2 && (
-		<CategoriesChart
-			userModel={props.userModel}
-			activeAccounts={activeAccounts}
-		/>
-	)}
-	{tab === 3 && <div>Tab 3</div>}
-	{tab === 4 && <div>Tab 4</div>} */
-}
-{
-	/* </> */
 }

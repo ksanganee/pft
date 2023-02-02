@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect } from "react";
 import LoginForm from "../components/LoginForm";
-import Centred from "../layouts/Centred";
 
 export default function LoginPageHandler() {
 	let router = useRouter();
@@ -15,8 +14,8 @@ export default function LoginPageHandler() {
 	}, [router]);
 
 	return (
-		<Centred>
+		<div className="flex justify-center items-center h-screen">
 			<LoginForm />
-		</Centred>
+		</div>
 	);
 }

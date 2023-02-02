@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-var yahooFinance = require("yahoo-finance");
-
 export default function AddInvestmentBar(props) {
 	const [currentTicker, setCurrentTicker] = useState("None");
+	const [currentPrice, setCurrentPrice] = useState("-");
 
 	const investmentOptions = [
 		["None", { name: "-", ticker: "-" }],
@@ -15,16 +14,17 @@ export default function AddInvestmentBar(props) {
 
 	const investmentMappings = new Map(investmentOptions);
 
-	// const getPrice = async () => {
-	// 	const response = await fetch("/api/get_investment_price", {
-	// 		method: "POST",
-	// 		body: JSON.stringify({
-	// 			ticker: props.investment.ticker,
-	// 		}),
-	// 	});
-	// 	const data = await response.json();
-	// 	return data.price;
-	// };
+	const getPrice = async (ticker) => {
+		if (ticker == "None") return "-";
+		const response = await fetch("/api/get_investment_price", {
+			method: "POST",
+			body: JSON.stringify({
+				ticker: ticker,
+			}),
+		});
+		const data = await response.json();
+		return data.price;
+	};
 
 	return (
 		<div>
@@ -98,6 +98,13 @@ export default function AddInvestmentBar(props) {
 								.getElementById("tickerInput")
 								.classList.remove("border-red-500");
 							setCurrentTicker(e.target.value);
+							getPrice(e.target.value).then((price) => {
+								if (price == 0) {
+									setCurrentPrice("-");
+								} else {
+									setCurrentPrice(`$${(Math.round(price * 100) / 100).toFixed(2)}`);
+								}
+							});
 						}}
 					>
 						{investmentOptions.map((option) => {
@@ -133,7 +140,7 @@ export default function AddInvestmentBar(props) {
 						}}
 					/>
 				</div>
-				<div className="w-[130px] py-4">-</div>
+				<div className="w-[130px] py-4">{currentPrice}</div>
 				<div className="w-[130px] py-4">-</div>
 			</div>
 		</div>

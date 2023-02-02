@@ -35,15 +35,53 @@ export default function TransactionsList(props) {
 	return loading ? (
 		<LoadingIndicator />
 	) : (
-		<div className="flex-col space-y-2 text-sm w-[80%] overflow-x-scroll overflow-y-scroll">
-			{transactions.map((transaction, i) => (
-				<TransactionBar
-					key={i}
-					transaction={transaction}
-					account={accountsMap.get(transaction.account_id)}
-					colour={true}
-				/>
-			))}
+		<div
+			id="transactionsContainer"
+			className="flex-col space-y-4 text-sm w-[80%] bottom-blur overflow-auto no-scrollbar"
+			onScroll={(e) => {
+				if (
+					e.target.scrollTop + e.target.clientHeight >=
+					e.target.scrollHeight
+				) {
+					document
+						.getElementById("transactionsContainer")
+						.classList.remove("bottom-blur");
+				} else {
+					document
+						.getElementById("transactionsContainer")
+						.classList.add("bottom-blur");
+				}
+			}}
+		>
+			{Object.keys(transactions)
+				.sort()
+				.reverse()
+				.map((date, i) => {
+					const uglyDate = new Date(date);
+					const niceDate = `${uglyDate.getDate()}/${
+						uglyDate.getMonth() + 1
+					}/${uglyDate.getFullYear()}`;
+					return (
+						<div key={i}>
+							<div className="text-gray-800 text-left p-1">
+								{niceDate}
+							</div>
+							<div className="flex-col space-y-1">
+								{transactions[date].map((transaction, j) => {
+									return (
+										<TransactionBar
+											key={j}
+											transaction={transaction}
+											account={accountsMap.get(
+												transaction.account_id
+											)}
+										/>
+									);
+								})}
+							</div>
+						</div>
+					);
+				})}
 		</div>
 	);
 }
