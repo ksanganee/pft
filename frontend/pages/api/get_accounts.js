@@ -9,11 +9,17 @@ export default async function GetAccountsHandler(req, res) {
 	let accounts = [];
 
 	const plaidClient = new PlaidApi({
-		basePath: process.env.ENVIRONMENT === "development" ? PlaidEnvironments.development : PlaidEnvironments.sandbox,
+		basePath:
+			process.env.ENVIRONMENT === "development"
+				? PlaidEnvironments.development
+				: PlaidEnvironments.sandbox,
 		baseOptions: {
 			headers: {
 				"PLAID-CLIENT-ID": process.env.CLIENT_ID,
-				"PLAID-SECRET": process.env.ENVIRONMENT === "development" ? process.env.DEVELOPMENT_SECRET : process.env.SANDBOX_SECRET,
+				"PLAID-SECRET":
+					process.env.ENVIRONMENT === "development"
+						? process.env.DEVELOPMENT_SECRET
+						: process.env.SANDBOX_SECRET,
 			},
 		},
 	});
@@ -41,7 +47,10 @@ export default async function GetAccountsHandler(req, res) {
 										accounts.push({
 											account_id: account.account_id,
 											name: account.name,
-											institution: institution_response.data.institution.name.split(" ")[0],
+											institution:
+												institution_response.data.institution.name.split(
+													" "
+												)[0],
 										});
 									}
 								);

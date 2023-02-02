@@ -1,9 +1,9 @@
 import { useState } from "react";
 import AccountsDropdown from "./AccountsDropdown";
-import TransactionsList from "./TransactionsList";
+import BudgetsSection from "./BudgetsSection";
 import CategoriesChart from "./CategoriesChart";
 import InvestmentsTable from "./InvestmentsTable";
-import BudgetsSection from "./BudgetsSection";
+import TransactionsList from "./TransactionsList";
 
 export default function TabViewer({ router, userModel, ...props }) {
 	const [currentTab, setCurrentTab] = useState(1);

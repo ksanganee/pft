@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import LoadingIndicator from "./LoadingIndicator";
 import AddInvestmentBar from "./AddInvestmentBar";
 import InvestmentTableRow from "./InvestmentTableRow";
+import LoadingIndicator from "./LoadingIndicator";
 
 export default function InvestmentsTable({ router, userModel, ...props }) {
 	const [investments, setInvestments] = useState([]);
