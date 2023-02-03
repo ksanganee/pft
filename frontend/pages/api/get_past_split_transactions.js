@@ -48,7 +48,11 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						date: transaction.date,
 						iso_currency_code: transaction.iso_currency_code,
 						merchant_name: transaction.merchant_name,
-						name: transaction.name,
+						name:
+							transaction.name ==
+							"Exchanged to ETH Round up Ethereum"
+								? "ETH Spare Change Round Up"
+								: transaction.name,
 					};
 					if (transaction.amount < 0) {
 						incomings.push(newTransaction);
@@ -70,7 +74,7 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 		res.status(200).json({ incomings, outgoings });
 	} catch (_) {
 		res.status(500).json({
-			error_message: "An error occurred in get_past_month_transactions",
+			error_message: "An error occurred in get_past_split_transactions",
 		});
 	}
 }
