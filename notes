@@ -1,22 +1,3 @@
-Next.js
-frontend, backend
-opt in
-
-what happens if duplicate accounts?
-
-make transactions look good
-on hover transactions show info
-
-make categories look good
-
-budgets:
-- guess from income but allow user to change
-- make 50:30:20 rule
-- display amounts
-- add tax calculations
-
-useCallBacks should set loading back to false
-
-remove vstack
-
-public-development-35afd512-797a-492e-ab0a-624deb0982b8
+clean-up budgets section
+tax calculations?
+if over budget, suggest what to do?
