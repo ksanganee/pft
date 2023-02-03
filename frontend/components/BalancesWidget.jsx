@@ -1,42 +1,50 @@
 import { useCallback, useEffect, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
 
-export default function BalancesWidget(props) {
+export default function BalancesWidget({
+	router,
+	userModel,
+	activeAccounts,
+	...props
+}) {
 	const [balances, setBalances] = useState([]);
 	const [loading, setLoading] = useState(true);
 
 	const getTransactions = useCallback(async () => {
 		setBalances([]);
-		await fetch("/api/get_balances", {
+		const res = await fetch("/api/get_balances", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
+				userId: userModel.id,
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				for (let i = 0; i < data.balances.length; i++) {
-					for (let j = 0; j < props.activeAccounts.length; j++) {
-						if (
-							data.balances[i].account_id ==
-							props.activeAccounts[j].account_id
-						) {
-							setBalances((newBalances) => [
-								...newBalances,
-								{
-									balance: data.balances[i].balance,
-									name: props.activeAccounts[j].name,
-									institution:
-										props.activeAccounts[j].institution,
-								},
-							]);
-							break;
-						}
-					}
+		});
+
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
+
+		const data = await res.json();
+
+		for (let i = 0; i < data.balances.length; i++) {
+			for (let j = 0; j < activeAccounts.length; j++) {
+				if (
+					data.balances[i].account_id == activeAccounts[j].account_id
+				) {
+					setBalances((newBalances) => [
+						...newBalances,
+						{
+							balance: data.balances[i].balance,
+							name: activeAccounts[j].name,
+							institution: activeAccounts[j].institution,
+						},
+					]);
+					break;
 				}
-				setLoading(false);
-			});
-	}, [props.activeAccounts, props.userModel.id]);
+			}
+		}
+		setLoading(false);
+	}, [activeAccounts, router, userModel.id]);
 
 	useEffect(() => {
 		setLoading(true);
