@@ -42,10 +42,9 @@ export default async function GetAccountsHandler(req, res) {
 			account_res.data.accounts.forEach((account) => {
 				accounts.push({
 					account_id: account.account_id,
-					balance:
-						account.balances.available || account.balances.current,
-					name: account.official_name,
-					institution: institution_res.data.institution.name,
+					name: account.name,
+					institution:
+						institution_res.data.institution.name.split(" ")[0],
 				});
 			});
 		}
