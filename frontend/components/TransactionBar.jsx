@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 export default function TransactionBar({ transaction, account, ...props }) {
+	console.log(transaction);
 	return (
 		<div className="group overflow-auto text-gray-600">
 			<div

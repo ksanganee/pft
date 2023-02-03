@@ -19,7 +19,7 @@ export default function CategoryBar({ transaction, account, ...props }) {
 					<div className="text-gray-400">{transaction.category}</div>
 				</div>
 				<div className="flex items-center">
-					{transaction.amount < 0 ? `+` : `-`}££
+					{transaction.amount < 0 ? `+` : `-`}£
 					{Math.abs(transaction.amount)}
 					<Image
 						src={`/${account.institution.toLowerCase()}.png`}
