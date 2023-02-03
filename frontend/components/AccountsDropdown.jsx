@@ -30,7 +30,7 @@ export default function AccountsDropdown({
 
 		setAccounts(data.accounts);
 		setActiveAccounts(data.accounts);
-	}, [userModel.id, setActiveAccounts]);
+	}, [userModel.id, setActiveAccounts, router]);
 
 	useEffect(() => {
 		getAccounts();
