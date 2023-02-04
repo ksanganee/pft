@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-export default function CategoryBar(props) {
-	if (!props.transaction || !props.account) return null;
+export default function CategoryBar({ transaction, account, ...props }) {
+	if (!transaction || !account) return null;
 
-	const uglyDate = new Date(props.transaction.date);
+	const uglyDate = new Date(transaction.date);
 	const niceDate = `${uglyDate.getDate()}/${uglyDate.getMonth() + 1}`;
 
-	const name = props.transaction.merchant_name || props.transaction.name;
+	const name = transaction.merchant_name || transaction.name;
 
 	return (
 		<div className="overflow-auto text-gray-600">
@@ -16,20 +16,16 @@ export default function CategoryBar(props) {
 				<div className="flex items-center">
 					<div className="w-[55px] text-center pr-2">{niceDate}</div>
 					<div className="mr-3">{name}</div>
-					{/* <div className="mr-3 truncate">CREDIT CARD CREDIT CARD CREDIT CARDM CARD</div> */}
-					<div className="text-gray-400">
-						{props.transaction.category}
-					</div>
+					<div className="text-gray-400">{transaction.category}</div>
 				</div>
 				<div className="flex items-center">
-					{/* {props.transaction.amount < 0 ? `+` : `-`}£ */}
-					£
-					{Math.abs(props.transaction.amount)}
+					{transaction.amount < 0 ? `+` : `-`}£
+					{Math.abs(transaction.amount)}
 					<Image
-						src={`/${props.account.institution.toLowerCase()}.png`}
+						src={`/${account.institution.toLowerCase()}.png`}
 						width={30}
 						height={20}
-						alt={props.account.institution}
+						alt={account.institution}
 						className="ml-2 shadow-sm rounded"
 					/>
 				</div>

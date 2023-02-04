@@ -17,10 +17,13 @@ export default function PlaidLinkButtons({
 			}),
 		});
 
-		const data = await res.json();
+		if (!res.ok) {
+			router.push("/error");
+		}
 
+		const data = await res.json();
 		setToken(data.link_token);
-	}, [userModel.id]);
+	}, [router, userModel.id]);
 
 	const linkSuccessCallback = useCallback(
 		async (publicToken, _) => {
@@ -34,9 +37,9 @@ export default function PlaidLinkButtons({
 
 			if (!res.ok) {
 				router.push("/error");
-			} else {
-				refresh();
 			}
+
+			refresh();
 		},
 		[refresh, router, userModel.id]
 	);

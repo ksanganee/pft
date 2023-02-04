@@ -30,10 +30,11 @@ export default function AddInvestmentBar({
 
 		if (!res.ok) {
 			router.push("/error");
-		} else {
-			const data = await res.json();
-			return data.price;
+			return;
 		}
+
+		const data = await res.json();
+		return data.price;
 	};
 
 	return (
@@ -69,7 +70,15 @@ export default function AddInvestmentBar({
 						}
 
 						const data = await res.json();
+
 						newInvestment.id = data.id;
+						// clear the input fields
+						document.getElementById("tickerInput").value = "None";
+						quantityInput.value = "";
+						costInput.value = "";
+						setCurrentTicker("None");
+						setCurrentPrice("-");
+
 						addInvestment(newInvestment);
 					} else {
 						if (currentTicker == "None") {
@@ -109,22 +118,22 @@ export default function AddInvestmentBar({
 					<select
 						id="tickerInput"
 						className="bg-gray-50 border text-gray-900 text-sm rounded-lg w-[80px] text-center"
-						onChange={(e) => {
+						onChange={async (e) => {
 							document
 								.getElementById("tickerInput")
 								.classList.remove("border-red-500");
 							setCurrentTicker(e.target.value);
-							getPrice(e.target.value).then((price) => {
-								if (price == 0) {
-									setCurrentPrice("-");
-								} else {
-									setCurrentPrice(
-										`$${(
-											Math.round(price * 100) / 100
-										).toFixed(2)}`
-									);
-								}
-							});
+							const price = await getPrice(e.target.value);
+
+							if (price == 0) {
+								setCurrentPrice("-");
+							} else {
+								setCurrentPrice(
+									`$${(Math.round(price * 100) / 100).toFixed(
+										2
+									)}`
+								);
+							}
 						}}
 					>
 						{investmentOptions.map((option) => {

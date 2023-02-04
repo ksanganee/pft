@@ -1,6 +1,6 @@
-import LoadingIndicator from "./LoadingIndicator";
+import { useCallback, useEffect, useState } from "react";
 import TrashIcon from "../svgs/TrashIcon";
-import { useState, useCallback, useEffect } from "react";
+import LoadingIndicator from "./LoadingIndicator";
 
 export default function InvestmentTableRow({
 	router,

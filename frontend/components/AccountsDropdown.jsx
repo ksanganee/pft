@@ -1,26 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
-import PlaidLinkButtons from "./PlaidLinkButtons";
-import LogoutButton from "./LogoutButton";
 import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+import LogoutButton from "./LogoutButton";
+import PlaidLinkButtons from "./PlaidLinkButtons";
 
-export default function AccountsDropdown(props) {
+export default function AccountsDropdown({
+	router,
+	userModel,
+	activeAccounts,
+	setActiveAccounts,
+	...props
+}) {
 	const [accounts, setAccounts] = useState([]);
 	const [dropped, setDropped] = useState(false);
 
 	const getAccounts = useCallback(async () => {
-		await fetch("/api/get_accounts", {
+		const res = await fetch("/api/get_accounts", {
 			method: "POST",
 			body: JSON.stringify({
-				userId: props.userModel.id,
+				userId: userModel.id,
 			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				setAccounts(data.accounts);
-				props.setActiveAccounts(data.accounts);
-			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.userModel.id, props.setActiveAccounts]);
+		});
+
+		if (!res.ok) {
+			router.push("/error");
+			return;
+		}
+
+		const data = await res.json();
+
+		setAccounts(data.accounts);
+		setActiveAccounts(data.accounts);
+	}, [userModel.id, setActiveAccounts, router]);
 
 	useEffect(() => {
 		getAccounts();
@@ -75,13 +85,13 @@ export default function AccountsDropdown(props) {
 											className="peer sr-only"
 											onChange={(e) => {
 												if (e.target.checked) {
-													props.setActiveAccounts([
-														...props.activeAccounts,
+													setActiveAccounts([
+														...activeAccounts,
 														account,
 													]);
 												} else {
-													props.setActiveAccounts(
-														props.activeAccounts.filter(
+													setActiveAccounts(
+														activeAccounts.filter(
 															(activeAccount) =>
 																activeAccount.account_id !=
 																account.account_id
@@ -109,11 +119,11 @@ export default function AccountsDropdown(props) {
 						);
 					})}
 					<PlaidLinkButtons
-						router={props.router}
-						userModel={props.userModel}
+						router={router}
+						userModel={userModel}
 						refresh={getAccounts}
 					/>
-					<LogoutButton />
+					<LogoutButton router={router} />
 				</ul>
 			</div>
 		</div>

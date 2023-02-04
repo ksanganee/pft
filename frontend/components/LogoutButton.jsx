@@ -1,10 +1,7 @@
-import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 
-export default function LogoutButton() {
+export default function LogoutButton({ router, ...props }) {
 	const pb = new PocketBase("http://127.0.0.1:8090");
-
-	let router = useRouter();
 
 	const handleSignout = async (e) => {
 		e.preventDefault();

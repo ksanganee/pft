@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
 
-export default function LoginForm() {
-	let router = useRouter();
-
+export default function LoginForm({ router, ...props }) {
 	const pb = new PocketBase("http://127.0.0.1:8090");
 
 	const [email, setEmail] = useState("");

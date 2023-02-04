@@ -8,7 +8,7 @@ export default async function GetInvestmentsHandler(req, res) {
 
 		let investments = [];
 
-		const record_res = await pbClient.records.getFullList(
+		const records_res = await pbClient.records.getFullList(
 			"investments",
 			200,
 			{
@@ -16,7 +16,7 @@ export default async function GetInvestmentsHandler(req, res) {
 			}
 		);
 
-		for (const entry of record_res) {
+		for (const entry of records_res) {
 			investments.push({
 				id: entry.id,
 				name: entry.name,
