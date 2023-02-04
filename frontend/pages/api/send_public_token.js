@@ -32,7 +32,7 @@ export default async function SendPublicTokenHandler(req, res) {
 			token: exchange_res.data.access_token,
 		});
 
-		res.status(200);
+		res.status(200).json({});
 	} catch (_) {
 		res.status(500).json({
 			error_message: "An error occurred in send_public_token",
