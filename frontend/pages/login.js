@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import LoginForm from "../components/LoginForm";
 
 export default function LoginPageHandler() {
-	let router = useRouter();
+	const router = useRouter();
 
 	useEffect(() => {
 		const pb = new PocketBase("http://127.0.0.1:8090");
@@ -15,7 +15,7 @@ export default function LoginPageHandler() {
 
 	return (
 		<div className="flex justify-center items-center h-screen">
-			<LoginForm />
+			<LoginForm router={router} />
 		</div>
 	);
 }
