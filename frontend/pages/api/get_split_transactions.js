@@ -1,16 +1,8 @@
 import { PlaidApi, PlaidEnvironments } from "plaid";
 import PocketBase from "pocketbase";
 
-var groupBy = function (xs, key) {
-	return xs.reduce(function (rv, x) {
-		(rv[x[key]] = rv[x[key]] || []).push(x);
-		return rv;
-	}, {});
-};
-
-export default async function GetDateGroupedTransactionsHandler(req, res) {
+export default async function GetPastSplitTransactionsHandler(req, res) {
 	try {
-		console.log(req.body);
 		const body = JSON.parse(req.body);
 
 		const pbClient = new PocketBase("http://127.0.0.1:8090");
@@ -31,25 +23,26 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 			},
 		});
 
-		let transactions = [];
+		const incomings = [];
+		const outgoings = [];
 
 		const records_res = await pbClient.records.getFullList("tokens", 200, {
 			filter: `user = '${body.userId}'`,
 		});
 
 		for (const entry of records_res) {
-			const transaction_list_res = await plaidClient.transactionsGet({
+			const transactions_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
-				start_date: new Date(
-					new Date().setDate(new Date().getDate() - 365)
-				)
-					.toISOString()
-					.split("T")[0],
-				end_date: new Date().toISOString().split("T")[0],
+				start_date: body.startDate,
+				// end_date: '2023-01-27',
+				end_date: body.endDate,
 			});
-			transaction_list_res.data.transactions.forEach((transaction) => {
-				if (body.activeAccounts.includes(transaction.account_id)) {
-					transactions.push({
+			transactions_res.data.transactions.forEach((transaction) => {
+				if (
+					body.activeAccounts == "all" ||
+					body.activeAccounts.includes(transaction.account_id)
+				) {
+					const newTransaction = {
 						account_id: transaction.account_id,
 						amount: transaction.amount,
 						category: transaction.category
@@ -66,16 +59,28 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 							"Exchanged to ETH Round up Ethereum"
 								? "ETH Spare Change"
 								: transaction.name,
-					});
+					};
+					if (transaction.amount < 0) {
+						incomings.push(newTransaction);
+					} else {
+						outgoings.push(newTransaction);
+					}
 				}
 			});
 		}
 
-		transactions = groupBy(transactions, "date");
-		res.status(200).json({ transactions });
+		incomings.sort((a, b) => {
+			return new Date(b.date) - new Date(a.date);
+		});
+
+		outgoings.sort((a, b) => {
+			return new Date(b.date) - new Date(a.date);
+		});
+
+		res.status(200).json({ incomings, outgoings });
 	} catch (_) {
 		res.status(500).json({
-			error_message: "An error occurred in get_date_grouped_transactions",
+			error_message: "An error occurred in get_split_transactions",
 		});
 	}
 }

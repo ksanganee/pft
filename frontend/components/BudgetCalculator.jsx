@@ -12,7 +12,7 @@ export default function BudgetCalculator({
 
 	const getIncome = useCallback(async () => {
 		setLoading(true);
-		const res = await fetch("/api/get_past_split_transactions", {
+		const res = await fetch("/api/get_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: userModel.id,
@@ -24,6 +24,7 @@ export default function BudgetCalculator({
 				)
 					.toISOString()
 					.slice(0, 10),
+				endDate: new Date().toISOString().slice(0, 10),
 			}),
 		});
 
