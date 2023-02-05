@@ -34,7 +34,7 @@ export default function CategoriesChart({
 	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	const getTransactions = useCallback(async () => {
-		const res = await fetch("/api/get_past_split_transactions", {
+		const res = await fetch("/api/get_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: userModel.id,
@@ -46,6 +46,7 @@ export default function CategoriesChart({
 				)
 					.toISOString()
 					.slice(0, 10),
+				endDate: new Date().toISOString().slice(0, 10),
 			}),
 		});
 

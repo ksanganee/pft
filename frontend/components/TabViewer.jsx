@@ -6,7 +6,7 @@ import InvestmentsTable from "./InvestmentsTable";
 import TransactionsList from "./TransactionsList";
 
 export default function TabViewer({ router, userModel, ...props }) {
-	const [currentTab, setCurrentTab] = useState(1);
+	const [currentTab, setCurrentTab] = useState(3);
 	const [activeAccounts, setActiveAccounts] = useState([]);
 
 	const tabs = [

@@ -43,7 +43,10 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						account_id: transaction.account_id,
 						amount: transaction.amount,
 						category: transaction.category
-							? transaction.category[0]
+							? transaction.name ==
+							  "Exchanged to ETH Round up Ethereum"
+								? "Round-up"
+								: transaction.category[0]
 							: "N/A",
 						date: transaction.date,
 						iso_currency_code: transaction.iso_currency_code,
@@ -51,7 +54,7 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						name:
 							transaction.name ==
 							"Exchanged to ETH Round up Ethereum"
-								? "ETH Spare Change Round Up"
+								? "ETH Spare Change"
 								: transaction.name,
 					};
 					if (transaction.amount < 0) {
