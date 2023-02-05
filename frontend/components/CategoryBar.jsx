@@ -1,12 +1,19 @@
 import Image from "next/image";
 
-export default function CategoryBar({ transaction, account, ...props }) {
+export default function CategoryBar({
+	transaction,
+	account,
+	categoryFilter,
+	...props
+}) {
 	if (!transaction || !account) return null;
 
 	const uglyDate = new Date(transaction.date);
 	const niceDate = `${uglyDate.getDate()}/${uglyDate.getMonth() + 1}`;
 
 	const name = transaction.merchant_name || transaction.name;
+
+	if (categoryFilter && transaction.category !== categoryFilter) return null;
 
 	return (
 		<div className="overflow-auto text-gray-600">
