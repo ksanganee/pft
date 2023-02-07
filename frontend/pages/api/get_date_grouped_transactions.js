@@ -10,10 +10,9 @@ var groupBy = function (xs, key) {
 
 export default async function GetDateGroupedTransactionsHandler(req, res) {
 	try {
-		console.log(req.body);
 		const body = JSON.parse(req.body);
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
+		const pbClient = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 		const plaidClient = new PlaidApi({
 			basePath:
@@ -37,6 +36,8 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 			filter: `user = '${body.userId}'`,
 		});
 
+		const today = new Date();
+
 		for (const entry of records_res) {
 			const transaction_list_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
@@ -48,7 +49,7 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 				)
 					.toISOString()
 					.slice(0, 10),
-				end_date: new Date().toISOString().slice(0, 10),
+				end_date: today.toISOString().slice(0, 10),
 			});
 			transaction_list_res.data.transactions.forEach((transaction) => {
 				if (body.activeAccounts.includes(transaction.account_id)) {
@@ -76,7 +77,8 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 
 		transactions = groupBy(transactions, "date");
 		res.status(200).json({ transactions });
-	} catch (_) {
+	} catch (e) {
+		console.log(e);
 		res.status(500).json({
 			error_message: "An error occurred in get_date_grouped_transactions",
 		});

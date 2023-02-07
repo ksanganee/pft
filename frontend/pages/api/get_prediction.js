@@ -65,7 +65,7 @@ export default async function GetPredictionHandler(req, res) {
 
 		const currentDate = new Date(body.currentDateString);
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
+		const pbClient = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 		const plaidClient = new PlaidApi({
 			basePath:

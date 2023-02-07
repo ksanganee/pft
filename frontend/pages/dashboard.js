@@ -6,7 +6,7 @@ import TabViewer from "../components/TabViewer";
 export default function Dashboard() {
 	const router = useRouter();
 
-	const pb = new PocketBase("http://127.0.0.1:8090");
+	const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 	const [userModel, setUserModel] = useState(null);
 
