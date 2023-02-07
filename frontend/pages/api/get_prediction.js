@@ -19,6 +19,9 @@ const getTransactions = async (
 			access_token: entry.token,
 			start_date,
 			end_date,
+			options: {
+				count: 500,
+			},
 		});
 		transactions_res.data.transactions.forEach((transaction) => {
 			if (transaction.amount > 0) {
@@ -46,7 +49,14 @@ const arrayISE = (transactions, array_size) => {
 	return data;
 };
 
-export default async function GetPastSplitTransactionsHandler(req, res) {
+var groupBy = function (xs, key) {
+	return xs.reduce(function (rv, x) {
+		(rv[x[key]] = rv[x[key]] || []).push(x);
+		return rv;
+	}, {});
+};
+
+export default async function GetPredictionHandler(req, res) {
 	try {
 		const body = JSON.parse(req.body);
 
@@ -70,83 +80,44 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 			},
 		});
 
-		let expenditure = await getTransactions(
+		const thisMonthSoFar = await getTransactions(
 			pbClient,
 			body.userId,
 			plaidClient,
 			new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
 				.toISOString()
 				.slice(0, 10),
-			new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
-				.toISOString()
-				.slice(0, 10)
-		).then((transactions) => arrayISE(transactions, currentDate.getDate()));
-
-		const lastMonthsExpenditure = await getTransactions(
-			pbClient,
-			body.userId,
-			plaidClient,
-			new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
-				.toISOString()
-				.slice(0, 10),
-			new Date(currentDate.getFullYear(), currentDate.getMonth(), 0)
-				.toISOString()
-				.slice(0, 10)
-		).then((transactions) =>
-			arrayISE(
-				transactions,
-				new Date(
-					currentDate.getFullYear(),
-					currentDate.getMonth(),
-					0
-				).getDate()
+			new Date(
+				currentDate.getFullYear(),
+				currentDate.getMonth(),
+				currentDate.getDate()
 			)
-		);
-
-		const lastLastMonthsExpenditure = await getTransactions(
-			pbClient,
-			body.userId,
-			plaidClient,
-			new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 1)
-				.toISOString()
-				.slice(0, 10),
-			new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 0)
 				.toISOString()
 				.slice(0, 10)
-		).then((transactions) =>
-			arrayISE(
-				transactions,
-				new Date(
-					currentDate.getFullYear(),
-					currentDate.getMonth() - 1,
-					0
-				).getDate()
-			)
-		);
+		).then((transactions) => {
+			const temp = arrayISE(transactions, currentDate.getDate());
+			return temp.map(
+				(
+					(sum) => (value) =>
+						(sum += value)
+				)(0)
+			);
+		});
 
 		const predicted = [];
-		for (let i = 0; i < expenditure.length-1; i++) {
+		for (let i = 0; i < thisMonthSoFar.length - 1; i++) {
 			predicted.push(null);
 		}
 
-		predicted.push(expenditure.reduce((a, b) => a + b, 0));
+		predicted.push(thisMonthSoFar[thisMonthSoFar.length - 1]);
 
 		for (let i = predicted.length; i < body.daysInMonth; i++) {
 			predicted.push(predicted[i - 1] + Math.random() * 100);
 		}
 
-		const cumulativeSum = (
-			(sum) => (value) =>
-				(sum += value)
-		)(0);
-
-		expenditure = expenditure.map(cumulativeSum);
-
 		res.status(200).json({
-			expenditure,
+			thisMonthSoFar,
 			predicted,
-			lastMonthsExpenditure,
-			lastLastMonthsExpenditure,
 		});
 	} catch (e) {
 		console.log(e);

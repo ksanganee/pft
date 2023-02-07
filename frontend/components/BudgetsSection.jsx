@@ -66,6 +66,7 @@ export default function BudgetsSection({
 			});
 
 			if (!res.ok) {
+				console.error("Error fetching prediction data");
 				router.push("/error");
 			}
 
@@ -115,6 +116,9 @@ export default function BudgetsSection({
 						id="monthly_budget_input"
 						className="bg-gray-50 text-gray-500 rounded pl-[13px] text-center outline-none p-1 peer focus:ring-[#fb923c] focus:ring-2 focus:ring-opacity-50 focus:text-gray-700"
 						defaultValue={defaultBudgetValue}
+						onBlur={(e) => {
+							getChartData(e.target.value);
+						}}
 					/>
 					<label
 						htmlFor="monthly_budget_input"
