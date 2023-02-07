@@ -1,63 +1,66 @@
 import { PlaidApi, PlaidEnvironments } from "plaid";
 import PocketBase from "pocketbase";
 
-const getTransactions = async (
-	pbClient,
-	userId,
-	plaidClient,
-	start_date,
-	end_date
-) => {
-	const outgoings = [];
-
-	const records_res = await pbClient.records.getFullList("tokens", 200, {
-		filter: `user = '${userId}'`,
-	});
-
-	for (const entry of records_res) {
-		const transactions_res = await plaidClient.transactionsGet({
-			access_token: entry.token,
-			start_date,
-			end_date,
-			options: {
-				count: 500,
-			},
-		});
-		transactions_res.data.transactions.forEach((transaction) => {
-			if (transaction.amount > 0) {
-				outgoings.push({
-					amount: transaction.amount,
-					date: transaction.date,
-				});
-			}
-		});
-	}
-
-	outgoings.sort((a, b) => {
-		return new Date(b.date) - new Date(a.date);
-	});
-
-	return outgoings;
-};
-
-const arrayISE = (transactions, array_size) => {
-	const data = Array.from({ length: array_size }, () => 0);
-	for (const transaction of transactions) {
-		const date = new Date(transaction.date);
-		data[date.getDate() - 1] += transaction.amount;
-	}
-	return data;
-};
-
-var groupBy = function (xs, key) {
-	return xs.reduce(function (rv, x) {
-		(rv[x[key]] = rv[x[key]] || []).push(x);
-		return rv;
-	}, {});
-};
-
 export default async function GetPredictionHandler(req, res) {
 	try {
+		const getTransactions = async (
+			pbClient,
+			userId,
+			plaidClient,
+			start_date,
+			end_date
+		) => {
+			const outgoings = [];
+
+			const records_res = await pbClient.records.getFullList(
+				"tokens",
+				200,
+				{
+					filter: `user = '${userId}'`,
+				}
+			);
+
+			for (const entry of records_res) {
+				const transactions_res = await plaidClient.transactionsGet({
+					access_token: entry.token,
+					start_date,
+					end_date,
+					options: {
+						count: 500,
+					},
+				});
+				transactions_res.data.transactions.forEach((transaction) => {
+					if (transaction.amount > 0) {
+						outgoings.push({
+							amount: transaction.amount,
+							date: transaction.date,
+						});
+					}
+				});
+			}
+
+			outgoings.sort((a, b) => {
+				return new Date(b.date) - new Date(a.date);
+			});
+
+			return outgoings;
+		};
+
+		const arrayISE = (transactions, array_size) => {
+			const data = Array.from({ length: array_size }, () => 0);
+			for (const transaction of transactions) {
+				const date = new Date(transaction.date);
+				data[date.getDate() - 1] += transaction.amount;
+			}
+			return data;
+		};
+
+		var groupBy = function (xs, key) {
+			return xs.reduce(function (rv, x) {
+				(rv[x[key]] = rv[x[key]] || []).push(x);
+				return rv;
+			}, {});
+		};
 		const body = JSON.parse(req.body);
 
 		const currentDate = new Date(body.currentDateString);
@@ -95,28 +98,41 @@ export default async function GetPredictionHandler(req, res) {
 				.toISOString()
 				.slice(0, 10)
 		).then((transactions) => {
-			const temp = arrayISE(transactions, currentDate.getDate());
-			return temp.map(
-				(
-					(sum) => (value) =>
-						(sum += value)
-				)(0)
-			);
+			return arrayISE(transactions, currentDate.getDate());
 		});
 
+		const expenditure = thisMonthSoFar.map(
+			(
+				(sum) => (value) =>
+					(sum += value)
+			)(0)
+		);
+
 		const predicted = [];
-		for (let i = 0; i < thisMonthSoFar.length - 1; i++) {
+		for (let i = 0; i < expenditure.length - 1; i++) {
 			predicted.push(null);
 		}
 
-		predicted.push(thisMonthSoFar[thisMonthSoFar.length - 1]);
+		predicted.push(expenditure[expenditure.length - 1]);
 
 		for (let i = predicted.length; i < body.daysInMonth; i++) {
 			predicted.push(predicted[i - 1] + Math.random() * 100);
 		}
 
+		const temp = await getTransactions(
+			pbClient,
+			body.userId,
+			plaidClient,
+			"2022-12-01",
+			"2022-12-31"
+		).then((transactions) => {
+			console.log(arrayISE(transactions, 31));
+		});
+
 		res.status(200).json({
+			// temp,
 			thisMonthSoFar,
+			expenditure,
 			predicted,
 		});
 	} catch (e) {
