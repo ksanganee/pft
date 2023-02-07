@@ -40,12 +40,15 @@ export default async function GetDateGroupedTransactionsHandler(req, res) {
 		for (const entry of records_res) {
 			const transaction_list_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
+				// this time last year
 				start_date: new Date(
-					new Date().setDate(new Date().getDate() - 365)
+					today.getFullYear() - 1,
+					today.getMonth(),
+					today.getDate()
 				)
 					.toISOString()
-					.split("T")[0],
-				end_date: new Date().toISOString().split("T")[0],
+					.slice(0, 10),
+				end_date: new Date().toISOString().slice(0, 10),
 			});
 			transaction_list_res.data.transactions.forEach((transaction) => {
 				if (body.activeAccounts.includes(transaction.account_id)) {
