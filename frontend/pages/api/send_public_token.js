@@ -25,7 +25,7 @@ export default async function SendPublicTokenHandler(req, res) {
 			public_token: body.publicToken,
 		});
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
+		const pbClient = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 		await pbClient.records.create("tokens", {
 			user: body.userId,

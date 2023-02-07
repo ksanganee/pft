@@ -4,7 +4,7 @@ export default async function RemoveInvestmentHandler(req, res) {
 	try {
 		const body = JSON.parse(req.body);
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
+		const pbClient = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 		await pbClient.records.delete("investments", body.investmentId);
 
