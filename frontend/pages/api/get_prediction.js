@@ -123,8 +123,9 @@ export default async function GetPredictionHandler(req, res) {
 			pbClient,
 			body.userId,
 			plaidClient,
-			"2022-12-01",
-			"2022-12-31"
+			"2023-01-08",
+			"2023-01-31"
+			
 		).then((transactions) => {
 			console.log(arrayISE(transactions, 31));
 		});
