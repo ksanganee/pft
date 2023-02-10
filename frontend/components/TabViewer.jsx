@@ -14,6 +14,7 @@ export default function TabViewer({ router, userModel, ...props }) {
 			name: "Transactions",
 			component: (
 				<TransactionsList
+					router={router}
 					userModel={userModel}
 					activeAccounts={activeAccounts}
 				/>

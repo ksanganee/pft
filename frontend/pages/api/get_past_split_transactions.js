@@ -34,8 +34,10 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 			const transactions_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
 				start_date: body.startDate,
-				// end_date: '2023-01-27',
 				end_date: new Date().toISOString().slice(0, 10),
+				options: {
+					count: 500,
+				},
 			});
 			transactions_res.data.transactions.forEach((transaction) => {
 				if (body.activeAccounts.includes(transaction.account_id)) {
