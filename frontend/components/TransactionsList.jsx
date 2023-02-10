@@ -11,6 +11,8 @@ export default function TransactionsList({
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	console.log(activeAccounts);
+
 	const getTransactions = useCallback(async () => {
 		const res = await fetch("/api/get_date_grouped_transactions", {
 			method: "POST",
