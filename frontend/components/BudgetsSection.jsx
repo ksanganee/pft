@@ -59,9 +59,6 @@ export default function BudgetsSection({
 				method: "POST",
 				body: JSON.stringify({
 					userId: userModel.id,
-					monthlyBudget: mb,
-					currentDateString: currentDate.toISOString(),
-					daysInMonth: daysInMonth,
 				}),
 			});
 
@@ -91,7 +88,7 @@ export default function BudgetsSection({
 					},
 					{
 						label: "Predicted",
-						data: data.predicted,
+						data: data.predictions,
 						borderColor: "#fb923c",
 						backgroundColor: "#fb923c",
 						borderDash: [3, 3],

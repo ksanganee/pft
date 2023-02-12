@@ -34,6 +34,7 @@ export default function CategoriesChart({
 	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	const getTransactions = useCallback(async () => {
+		const today = new Date();
 		const res = await fetch("/api/get_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
@@ -41,12 +42,8 @@ export default function CategoriesChart({
 				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
-				startDate: new Date(
-					new Date().setDate(new Date().getDate() - 30)
-				)
-					.toISOString()
-					.slice(0, 10),
-				endDate: new Date().toISOString().slice(0, 10),
+				startDate: new Date(new Date().setDate(today.getDate() - 30)),
+				endDate: today,
 			}),
 		});
 
