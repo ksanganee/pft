@@ -2,3 +2,7 @@
 *.local
 backend/pocketbase
 backend/pb_data/*
+
+/backend/oscar.ipynb
+/backend/stock-prices.csv
+/backend/transactions.csv

@@ -9,7 +9,8 @@ export default async function GetInvestmentPriceHandler(req, res) {
 		const stock_data = await stock_res.json();
 
 		res.status(200).json({ price: stock_data[0].price });
-	} catch (_) {
+	} catch (e) {
+		console.log(e);
 		res.status(500).json({
 			error_message: "An error occurred in get_investment_price",
 		});

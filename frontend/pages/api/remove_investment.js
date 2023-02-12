@@ -1,15 +1,16 @@
-import PocketBase from "pocketbase";
+import GetClients from "../../utils/clients";
+
+const { pocketbaseClient } = GetClients();
 
 export default async function RemoveInvestmentHandler(req, res) {
 	try {
 		const body = JSON.parse(req.body);
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
-
-		await pbClient.records.delete("investments", body.investmentId);
+		await pocketbaseClient.records.delete("investments", body.investmentId);
 
 		res.status(200).json({});
-	} catch (_) {
+	} catch (e) {
+		console.log(e);
 		res.status(500).json({
 			error_message: "An error occurred in remove_investment",
 		});

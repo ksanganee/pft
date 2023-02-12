@@ -1,41 +1,27 @@
-import { PlaidApi, PlaidEnvironments } from "plaid";
-import PocketBase from "pocketbase";
+import GetClients from "../../utils/clients";
 
-export default async function GetPastSplitTransactionsHandler(req, res) {
+const { pocketbaseClient, plaidClient } = GetClients();
+
+export default async function GetSplitTransactions(req, res) {
 	try {
 		const body = JSON.parse(req.body);
-
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
-
-		const plaidClient = new PlaidApi({
-			basePath:
-				process.env.ENVIRONMENT === "development"
-					? PlaidEnvironments.development
-					: PlaidEnvironments.sandbox,
-			baseOptions: {
-				headers: {
-					"PLAID-CLIENT-ID": process.env.CLIENT_ID,
-					"PLAID-SECRET":
-						process.env.ENVIRONMENT === "development"
-							? process.env.DEVELOPMENT_SECRET
-							: process.env.SANDBOX_SECRET,
-				},
-			},
-		});
 
 		const incomings = [];
 		const outgoings = [];
 
-		const records_res = await pbClient.records.getFullList("tokens", 200, {
-			filter: `user = '${body.userId}'`,
-		});
+		const records_res = await pocketbaseClient.records.getFullList(
+			"tokens",
+			200,
+			{
+				filter: `user = '${body.userId}'`,
+			}
+		);
 
 		for (const entry of records_res) {
 			const transactions_res = await plaidClient.transactionsGet({
 				access_token: entry.token,
-				start_date: body.startDate,
-				// end_date: '2023-01-27',
-				end_date: new Date().toISOString().slice(0, 10),
+				start_date: new Date(body.startDate).toISOString().slice(0, 10),
+				end_date: new Date(body.endDate).toISOString().slice(0, 10),
 			});
 			transactions_res.data.transactions.forEach((transaction) => {
 				if (body.activeAccounts.includes(transaction.account_id)) {
@@ -43,7 +29,10 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						account_id: transaction.account_id,
 						amount: transaction.amount,
 						category: transaction.category
-							? transaction.category[0]
+							? transaction.name ==
+							  "Exchanged to ETH Round up Ethereum"
+								? "Round-up"
+								: transaction.category[0]
 							: "N/A",
 						date: transaction.date,
 						iso_currency_code: transaction.iso_currency_code,
@@ -51,7 +40,7 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 						name:
 							transaction.name ==
 							"Exchanged to ETH Round up Ethereum"
-								? "ETH Spare Change Round Up"
+								? "ETH Spare Change"
 								: transaction.name,
 					};
 					if (transaction.amount < 0) {
@@ -72,9 +61,10 @@ export default async function GetPastSplitTransactionsHandler(req, res) {
 		});
 
 		res.status(200).json({ incomings, outgoings });
-	} catch (_) {
+	} catch (e) {
+		console.log(e);
 		res.status(500).json({
-			error_message: "An error occurred in get_past_split_transactions",
+			error_message: "An error occurred in get_split_transactions",
 		});
 	}
 }
