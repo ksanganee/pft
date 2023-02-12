@@ -1,4 +1,4 @@
-import GetClients from "../../utils/GetClients";
+import GetClients from "../../utils/clients";
 
 const { pocketbaseClient } = GetClients();
 

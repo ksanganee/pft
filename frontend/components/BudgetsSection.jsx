@@ -8,7 +8,7 @@ import {
 	Title,
 	Tooltip,
 } from "chart.js";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import LoadingIndicator from "./LoadingIndicator";
 

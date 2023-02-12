@@ -74,7 +74,13 @@ export default function TabViewer({ router, userModel, ...props }) {
 				/>
 			</div>
 			<div className="mt-8 flex justify-center h-[70vh] bg-white rounded max-w-[80vw]">
-				{activeAccounts.length > 0 && tabs[currentTab - 1].component}
+				{activeAccounts.length > 0 ? (
+					tabs[currentTab - 1].component
+				) : (
+					<div className="text-gray-700">
+						Please add an account to continue
+					</div>
+				)}
 			</div>
 		</>
 	);

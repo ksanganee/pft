@@ -1,6 +1,6 @@
 import GetClients from "../../utils/clients";
 
-const { plaidClient } = GetClients();
+const { pocketbaseClient, plaidClient } = GetClients();
 
 export default async function SendPublicTokenHandler(req, res) {
 	try {
@@ -10,7 +10,7 @@ export default async function SendPublicTokenHandler(req, res) {
 			public_token: body.publicToken,
 		});
 
-		await pbClient.records.create("tokens", {
+		await pocketbaseClient.records.create("tokens", {
 			user: body.userId,
 			token: exchange_res.data.access_token,
 		});
