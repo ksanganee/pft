@@ -1,14 +1,14 @@
-import PocketBase from "pocketbase";
+import GetClients from "../../utils/clients";
+
+const { pocketbaseClient } = GetClients();
 
 export default async function GetInvestmentsHandler(req, res) {
 	try {
 		const body = JSON.parse(req.body);
 
-		const pbClient = new PocketBase("http://127.0.0.1:8090");
-
 		let investments = [];
 
-		const records_res = await pbClient.records.getFullList(
+		const records_res = await pocketbaseClient.records.getFullList(
 			"investments",
 			200,
 			{
@@ -27,7 +27,8 @@ export default async function GetInvestmentsHandler(req, res) {
 		}
 
 		res.status(200).json({ investments });
-	} catch (_) {
+	} catch (e) {
+		console.log(e);
 		res.status(500).json({
 			error_message: "An error occurred in get_investments",
 		});

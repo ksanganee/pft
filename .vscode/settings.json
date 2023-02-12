@@ -2,9 +2,7 @@
 	"latex-workshop.latex.recipes": [
 		{
 			"name": "latexmk pft",
-			"tools": [
-				"latexmk"
-			]
+			"tools": ["latexmk"]
 		}
 	],
 	"latex-workshop.latex.tools": [
@@ -24,16 +22,15 @@
 				"%DOC%"
 			],
 			"env": {}
-		},
+		}
 	],
 	"cSpell.words": [
 		"pocketbase",
 		"Signout",
 		"Signup",
 		"svgs",
+		"tailwindcss",
 		"Widgit"
 	],
-	"eslint.workingDirectories": [
-		{ "mode": "auto" }
-	]
+	"eslint.workingDirectories": [{ "mode": "auto" }]
 }

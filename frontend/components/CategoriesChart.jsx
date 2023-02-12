@@ -1,6 +1,7 @@
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import { useCallback, useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Pie, getElementAtEvent } from "react-chartjs-2";
+import TrashIcon from "../svgs/TrashIcon";
 import CategoryBar from "./CategoryBar";
 import LoadingIndicator from "./LoadingIndicator";
 
@@ -27,22 +28,22 @@ export default function CategoriesChart({
 }) {
 	const [outgoings, setOutgoings] = useState([]);
 	const [chartData, setChartData] = useState(null);
+	const chartRef = useRef();
+	const [categoryFilter, setCategoryFilter] = useState(null);
 
 	ChartJS.register(ArcElement, Tooltip, Legend);
 
 	const getTransactions = useCallback(async () => {
-		const res = await fetch("/api/get_past_split_transactions", {
+		const today = new Date();
+		const res = await fetch("/api/get_split_transactions", {
 			method: "POST",
 			body: JSON.stringify({
 				userId: userModel.id,
 				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
-				startDate: new Date(
-					new Date().setDate(new Date().getDate() - 30)
-				)
-					.toISOString()
-					.slice(0, 10),
+				startDate: new Date(new Date().setDate(today.getDate() - 30)),
+				endDate: today,
 			}),
 		});
 
@@ -76,11 +77,17 @@ export default function CategoriesChart({
 				},
 			],
 		});
+
+		return Object.keys(groups);
 	}, [activeAccounts, router, userModel.id]);
+
+	let categories = useRef([]);
 
 	useEffect(() => {
 		setChartData(null);
-		getTransactions();
+		getTransactions().then((res) => {
+			categories.current = res;
+		});
 	}, [getTransactions]);
 
 	const accountsMap = new Map(
@@ -95,6 +102,7 @@ export default function CategoriesChart({
 			<div className="flex w-[120vh] justify-center space-x-3">
 				<div className="w-[60vh]">
 					<Pie
+						ref={chartRef}
 						data={chartData}
 						options={{
 							plugins: {
@@ -103,16 +111,45 @@ export default function CategoriesChart({
 								},
 							},
 						}}
+						onClick={(e) => {
+							const point = getElementAtEvent(
+								chartRef.current,
+								e
+							);
+							if (!point.length) return;
+
+							setCategoryFilter(
+								categories.current[point[0].index]
+							);
+						}}
 					/>
 				</div>
-				<div className="flex-col space-y-2 text-sm overflow-auto max-h-[60vh] w-[60vh]">
-					{outgoings.map((transaction, i) => (
-						<CategoryBar
-							key={i}
-							transaction={transaction}
-							account={accountsMap.get(transaction.account_id)}
-						/>
-					))}
+				<div className="flex-col space-y-2 text-sm max-h-[59vh] w-[60vh]">
+					{categoryFilter && (
+						<div
+							className="text-red-600 bg-red-200 rounded w-[60vh] p-1"
+							onClick={() => setCategoryFilter(null)}
+						>
+							{categoryFilter}
+							<TrashIcon className="inline pb-1 pl-1 ml-1" />
+						</div>
+					)}
+					<div
+						className={`flex-col space-y-2 text-sm overflow-auto ${
+							categoryFilter ? "max-h-[56vh]" : "max-h-[56vh]"
+						} w-[60vh]`}
+					>
+						{outgoings.map((transaction, i) => (
+							<CategoryBar
+								key={i}
+								transaction={transaction}
+								account={accountsMap.get(
+									transaction.account_id
+								)}
+								categoryFilter={categoryFilter}
+							/>
+						))}
+					</div>
 				</div>
 			</div>
 		</div>

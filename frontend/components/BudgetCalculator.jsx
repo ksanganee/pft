@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import LoadingIndicator from "./LoadingIndicator";
+import { useState } from "react";
 
 export default function BudgetCalculator({
 	router,
@@ -7,47 +6,9 @@ export default function BudgetCalculator({
 	activeAccounts,
 	...props
 }) {
-	const [loading, setLoading] = useState(true);
-	const [income, setIncome] = useState(0);
+	const [income, setIncome] = useState(1000);
 
-	const getIncome = useCallback(async () => {
-		setLoading(true);
-		const res = await fetch("/api/get_past_split_transactions", {
-			method: "POST",
-			body: JSON.stringify({
-				userId: userModel.id,
-				activeAccounts: activeAccounts.map(
-					(account) => account.account_id
-				),
-				startDate: new Date(
-					new Date().setDate(new Date().getDate() - 30)
-				)
-					.toISOString()
-					.slice(0, 10),
-			}),
-		});
-
-		if (!res.ok) {
-			router.push("/error");
-			return;
-		}
-
-		const data = await res.json();
-
-		let predictedIncome = 0;
-		for (let i = 0; i < data.incomings.length; i++) {
-			predictedIncome += -1 * data.incomings[i].amount;
-		}
-		setIncome(Math.round(predictedIncome), setLoading(false));
-	}, [activeAccounts, router, userModel.id]);
-
-	useEffect(() => {
-		getIncome();
-	}, [getIncome]);
-
-	return loading ? (
-		<LoadingIndicator />
-	) : (
+	return (
 		<div className="flex-col space-y-2 overflow-auto">
 			<div className="mt-5">
 				<input

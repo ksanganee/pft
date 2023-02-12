@@ -3,7 +3,7 @@ import PocketBase from "pocketbase";
 import { useEffect, useState } from "react";
 
 export default function LoginForm({ router, ...props }) {
-	const pb = new PocketBase("http://127.0.0.1:8090");
+	const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

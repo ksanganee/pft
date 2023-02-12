@@ -12,6 +12,7 @@ export default function TransactionsList({
 	const [loading, setLoading] = useState(true);
 
 	const getTransactions = useCallback(async () => {
+		const today = new Date();
 		const res = await fetch("/api/get_date_grouped_transactions", {
 			method: "POST",
 			body: JSON.stringify({
@@ -19,6 +20,12 @@ export default function TransactionsList({
 				activeAccounts: activeAccounts.map(
 					(account) => account.account_id
 				),
+				startDate: new Date(
+					today.getFullYear() - 1,
+					today.getMonth(),
+					today.getDate()
+				),
+				endDate: today,
 			}),
 		});
 
@@ -27,6 +34,7 @@ export default function TransactionsList({
 		}
 
 		const data = await res.json();
+
 		setTransactions(data.transactions, setLoading(false));
 	}, [activeAccounts, router, userModel.id]);
 
