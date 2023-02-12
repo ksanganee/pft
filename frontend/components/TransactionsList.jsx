@@ -35,7 +35,6 @@ export default function TransactionsList({
 
 		const data = await res.json();
 
-		console.log("aabc", data);
 		setTransactions(data.transactions, setLoading(false));
 	}, [activeAccounts, router, userModel.id]);
 

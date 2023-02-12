@@ -1,9 +1,9 @@
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pie, getElementAtEvent } from "react-chartjs-2";
+import TrashIcon from "../svgs/TrashIcon";
 import CategoryBar from "./CategoryBar";
 import LoadingIndicator from "./LoadingIndicator";
-import TrashIcon from "../svgs/TrashIcon";
 
 function makeColor(colorNum, colors) {
 	if (colors < 1) colors = 1;
@@ -121,7 +121,6 @@ export default function CategoriesChart({
 							setCategoryFilter(
 								categories.current[point[0].index]
 							);
-							// console.log(categories.current[point[0].index]);
 						}}
 					/>
 				</div>

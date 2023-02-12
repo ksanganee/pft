@@ -1,4 +1,4 @@
-import GetClients from "../../utils/get_clients";
+import GetClients from "../../utils/clients";
 import GroupBy from "../../utils/group";
 
 const { pocketbaseClient, plaidClient } = GetClients();
@@ -81,8 +81,6 @@ export default async function GetPredictionHandler(req, res) {
 			}),
 		}).then((res) => res.json());
 
-		console.log(predictions);
-
 		expenditure = expenditure.slice(-today.getDate(), amounts.length);
 
 		expenditure = expenditure.map(
@@ -118,8 +116,6 @@ export default async function GetPredictionHandler(req, res) {
 		for (let i = 0; i < today.getDate() - 1; i++) {
 			predictions[i] = null;
 		}
-
-		console.log(expenditure);
 
 		res.status(200).json({ expenditure, predictions });
 	} catch (e) {

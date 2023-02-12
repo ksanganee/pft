@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import LoadingIndicator from "./LoadingIndicator";
+import { useState } from "react";
 
 export default function BudgetCalculator({
 	router,
