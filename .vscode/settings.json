@@ -25,11 +25,14 @@
 		}
 	],
 	"cSpell.words": [
+		"keras",
 		"pocketbase",
 		"Signout",
 		"Signup",
+		"sklearn",
 		"svgs",
 		"tailwindcss",
+		"tensorflow",
 		"Widgit"
 	],
 	"eslint.workingDirectories": [{ "mode": "auto" }]
