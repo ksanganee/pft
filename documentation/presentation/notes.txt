@@ -1,0 +1,56 @@
+what is project
+- personal finance tool website
+- built using open banking technology
+- users can collate their bank accounts into one central dashboard to view analytics
+- 3 major parts: transactions, budgets, investments
+
+motivations
+- improve financial literacy and money management
+- view all accounts in one place
+- limitations of current products
+- make spending predictions
+
+background
+- what is open banking
+- plaid
+- 
+
+project methodology
+- 4 phases:
+	- research into development technologies
+	- initial proofs of concepts (authentication system, using plaid)
+	- combination the POCs into a working MVP and adding the extra features
+	- budget prediction
+
+analysis/design/contribution/solution/research
+- software architecture
+- plaid pipeline flow
+- security considerations
+- budget prediction options - conclusion of lstm
+- what is lstm and how used
+
+evaluation
+-
+
+scope limitations
+- 
+
+project management
+- used git for version control with a gitflow workflow
+- followed proper software engineering practises and agile, waterfall, hybrid methodologies
+
+
+demo
+- 
+
+future work
+-
+
+titles:
+- introduction
+- motivations
+- background
+- phases
+- software 
+- demo
+- management
