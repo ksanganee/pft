@@ -7,7 +7,7 @@ from keras.layers import SimpleRNN, Dense
 
 # constants
 dataset = "plaid"
-epochs = 30
+epochs = 250
 
 
 def create_rnn_dataset(data, window_size=1):
