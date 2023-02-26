@@ -6,7 +6,7 @@ import tensorflow as tf
 
 # constants
 dataset = "plaid"
-epochs = 30
+epochs = 250
 
 price_model, scaler = pickle.load(open(f"models/{dataset}_{epochs}.pkl", "rb"))
 
