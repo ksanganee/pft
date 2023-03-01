@@ -30,7 +30,6 @@ train_x, train_y = create_rnn_dataset(scaled_amounts, window_size)
 
 price_model = Sequential()
 price_model.add(LSTM(64, input_shape=(1, window_size)))
-# price_model.add(SimpleRNN(64, input_shape=(1, window_size)))
 price_model.add(Dense(1))
 price_model.compile(loss="mean_squared_error", optimizer="adam", metrics=["mse"])
 price_model.summary()
