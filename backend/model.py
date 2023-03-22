@@ -3,11 +3,11 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
-from keras.layers import SimpleRNN, Dense
+from keras.layers import Dense, LSTM
 
 # constants
 dataset = "plaid"
-epochs = 30
+epochs = 250
 
 
 def create_rnn_dataset(data, window_size=1):
@@ -29,10 +29,9 @@ window_size = 30
 train_x, train_y = create_rnn_dataset(scaled_amounts, window_size)
 
 price_model = Sequential()
-price_model.add(SimpleRNN(64, input_shape=(1, window_size)))
+price_model.add(LSTM(64, input_shape=(1, window_size)))
 price_model.add(Dense(1))
-price_model.compile(loss="mean_squared_error",
-                    optimizer="adam", metrics=["mse"])
+price_model.compile(loss="mean_squared_error", optimizer="adam", metrics=["mse"])
 price_model.summary()
 
 train_x = np.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))

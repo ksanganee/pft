@@ -15,8 +15,6 @@ export default async function GetTrainingDataHandler(req, res) {
 			}
 		);
 
-		const today = new Date();
-
 		const amounts = [];
 
 		for (let i = 0; i < 25; i++) {
