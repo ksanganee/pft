@@ -15,6 +15,8 @@ export default async function GetPredictionHandler(req, res) {
 			}
 		);
 
+		// Change here to change the date for postman queries
+		// const today = new Date("2023-01-10");
 		const today = new Date();
 
 		const transactions = [];
