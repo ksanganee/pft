@@ -43,7 +43,7 @@ To use Plaid's endpoints, a strict authentication flow must be followed as it is
 
 The flow is therefore: the client requests a link token on behalf of the user, the response link token is then passed to the link widget where the user signs in with their bank; the link widget returns a public token to the client which is passed to the application's backend; the backend exchanges the public token for an access token and then stores this in the database in such a way that only that user can access it. Whenever the client wants to gain access to that user's transactions, it queries the server acting as a proxy. The server identifies which user is asking for the information and attaches their access token to a new request to Plaid. The Plaid response is then forwarded back to the client and the client can display the information to the user. This flow is shown in Figure \ref{fig:plaid_auth_flow}.
 
-\begin{figure}[H]
+\begin{figure}[h!]
 	\centering
     \includegraphics[width=\textwidth]{Plaid_auth_flow_sequence_diagram.png}
 	\vspace{-0.8cm}
