@@ -119,7 +119,7 @@ Deciding the architecture of the neural network would involve lots of trial and 
 
 \section{Software Architecture}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{images/Architecture.drawio.png}
 	\caption{Software Architecture}
@@ -130,6 +130,8 @@ The figure above (\ref{fig:SoftwareArchitecture}) shows the software architectur
 
 \section{Endpoints}
 Given the design for the strategies that the web application will exhibit, various Next.js API routes will be required. All of these routes will be prefixed with "/api" to be accessed by the client, and will be accessed using the HTTP POST method. This is because the requests often need to contain some contextual information for the server to decide what to do, for example, contain the user identifier to determine which user's transactions are being requested. The information passed between the client and server will be in JSON format as helps represent the data in a structured format as well as being easy to parse by both the client and server being written in JavaScript. In addition, python has a built in JSON library to work when communicating with the Python Flask API. Also each route will be written such that it can only perform its intended function or return an error. This is such that all the error checking can be done on the client side to improve security, as well as reduce the amount of code to be written and make the user experience better for graceful error handling.
+
+\section{Legal, Ethical and Professional Considerations}
 
 
 
