@@ -9,18 +9,14 @@
 
 %%%%%%%%%%%%%%%%%%%%
 
-\pagestyle{plain}
-\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+\renewcommand{\headrulewidth}{0pt}
 
-\makeatletter
-\fancypagestyle{plain}{
-	\fancyhf{}
-	\fancyhead[LE]{\thepage}
-	\fancyhead[RE]{\textit{\@author}}
-	\fancyhead[RO]{\thepage}
-	\fancyhead[LO]{\textit{\@title}}
-}
-\makeatother
+\pagestyle{fancy}
+\fancyhead[L]{\textit{\leftmark}}
+\fancyhead[R]{\textit{\thepage}}
+\fancyfoot[]{}
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -28,23 +24,17 @@
 
 \input{../common/titlepage.tex}
 
-\pagestyle{plain}
-
 \input{abstract.tex}
 
+\addtocontents{toc}{\protect\markboth{Contents}{}}
 \tableofcontents
 
 \input{introduction.tex}
 \input{background.tex}
-% \input{methodology.tex}
-% \input{issues.tex}
 \input{design.tex}
 \input{implementation.tex}
-% \input{testing.tex}
 \input{evaluation.tex}
-% \input{results.tex}
 \input{conclusions.tex}
-% \input{reflections.tex}
 
 \bibliographystyle{../common/plainnat}
 \bibliography{../common/bibliography}
