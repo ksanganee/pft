@@ -26,6 +26,7 @@
 	],
 	"cSpell.words": [
 		"fulfills",
+		"hotfixes",
 		"keras",
 		"Monzo",
 		"overfit",
@@ -37,6 +38,7 @@
 		"svgs",
 		"tailwindcss",
 		"tensorflow",
+		"Vercel",
 		"Widgit"
 	],
 	"eslint.workingDirectories": [{ "mode": "auto" }]
