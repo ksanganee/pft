@@ -1,4 +1,6 @@
-\documentclass[a4paper,fleqn,twoside,12pt]{report}
+\documentclass[a4paper,fleqn,12pt]{report}
+\setlength{\headheight}{14.5pt}
+\addtolength{\topmargin}{-2.5pt}
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -9,18 +11,17 @@
 
 %%%%%%%%%%%%%%%%%%%%
 
-\pagestyle{plain}
-\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+\renewcommand{\headrulewidth}{0pt}
 
-\makeatletter
-\fancypagestyle{plain}{
-	\fancyhf{}
-	\fancyhead[LE]{\thepage}
-	\fancyhead[RE]{\textit{\@author}}
-	\fancyhead[RO]{\thepage}
-	\fancyhead[LO]{\textit{\@title}}
-}
-\makeatother
+\pagestyle{fancy}
+% \fancyhead[L]{\textit{\leftmark}}
+% \fancyhead[R]{\textit{\thepage}}
+\fancyhead[]{}
+\fancyfoot[]{}
+
+\assignpagestyle{\chapter}{fancy}
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -28,10 +29,9 @@
 
 \input{../common/titlepage.tex}
 
-\pagestyle{plain}
-
 \input{abstract.tex}
 
+\addtocontents{toc}{\protect\markboth{Contents}{}}
 \tableofcontents
 
 \input{introduction.tex}
