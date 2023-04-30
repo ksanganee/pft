@@ -1,6 +1,5 @@
 \chapter{Background}
 \label{ch:background}
-
 This section provides background information on the problem area by introducing and explaining concepts used throughout the rest of the document.
 
 \section{Current services}
@@ -35,12 +34,11 @@ The main weakness of software like this is requiring users to import their data 
 \label{sec:mobile-banking-applications}
 The next category is mobile banking applications. These are the default applications that come with each bank. Almost always, if the bank offers a website for online banking, they also offer a mobile application that performs the same functions. Examples include the major banks such as HSBC, NatWest, Lloyds, and online-only banks such as Monzo and Revolut. Often, these applications do not use open banking; instead, they work with the accounts from that specific company. Some do connect with other banks; however, they often do not incorporate these accounts into the analytics and instead, just display the balances.
 
-Taking Revolut \cite{RevolutWebsite} as a case study, we can find its strengths to incorporate, as well as its weaknesses to avoid in the web application. Firstly, to even use Revolut's app functionality, users must open a bank account with the service and prove their identity. Although this gives the user confidence that their information is secure and personalised, it is also more challenging to use, slower to access the information, and overall is a catch. It also means that the app's primary purpose is not to provide a user with an overview of their finances but to provide a banking service, meaning it is not entirely focused on improving financial capability.
+\subsubsection{Case Study: Revolut}
+By investigating Revolut \cite{RevolutWebsite}, we can find its strengths to incorporate, as well as its weaknesses to avoid in the web application. Firstly, to even use Revolut's app functionality, users must open a bank account with the service and prove their identity. Although this gives the user confidence that their information is secure and personalised, it is also more challenging to use, slower to access the information, and overall is a catch. It also means that the app's primary purpose is not to provide a user with an overview of their finances but to provide a banking service, meaning it is not entirely focused on improving financial capability.
 
-% \subsubsection{Strengths}
 Some features of Revolut are worth acknowledging, such as the UI and ability to track expenditures. A slick and intuitive user interface enables users to understand all aspects of their finances and helps build confidence. In addition, expenditure tracking is beneficial, as it allows users to customise a budget for a set period and shows what and when they have spent money during this period; overall, aiming to help them stay within the budget.
 
-% \subsubsection{Conclusion}
 Revolut is a service that utilises open banking as it allows users to connect the app to their other bank accounts; however, it does not incorporate these into the budgets and only includes them in the net worth section. Revolut is an excellent example of a service that does use open banking but does not utilise it to its full potential.
 
 \subsection{Paid Applications}
@@ -64,13 +62,22 @@ Each bank has its own set of endpoints, such that the authentication process and
 Plaid is a platform that effectively wraps all the endpoints provided by the individual banks and provides a single standardised set of REST API endpoints as URLs. Using Plaid allows a third-party application only to query Plaid and, in turn, can support all the banks that Plaid provides access to - over twelve-thousand institutions \cite{PlaidInstitutions}.
 
 \subsection{Plaid Tokens}
-A strict authentication flow must be followed to use Plaid's endpoints because it handles private data. Plaid has three different types of tokens as part of this flow. The first is the link token.
+A strict authentication flow must be followed to use Plaid's endpoints because it handles private data. Plaid has three different types of tokens as part of this flow:
 
-Link is the widget's name and pop-up used to authenticate the user with their bank. To start this process requires a link token. These can be requested from Plaid's API and are valid for 4 hours, but are not tied to any user and do not treated like passwords.
+\begin{enumerate}
+    \item Link tokens
+    \item Public tokens
+    \item Access tokens
+\end{enumerate}
 
-Secondly, there are public tokens. These are what the link widget returns to the web application after the user has authenticated with their bank. They are unique to that user and are not treated like passwords, as they are valid for only 30 minutes and cannot be used to access a user's private information directly. In addition, they must be exchanged for an access token, the third type of token.
+\subsubsection{Link Tokens}
+The first are link tokens. Link is the widget's name and pop-up used to authenticate the user with their bank. To start this process requires a link token. These can be requested from Plaid's API and are valid for 4 hours, but are not tied to any user nor are they treated like passwords.
 
-Exchanging the public token for an access token is done via a Plaid endpoint. However, because the access token must be treated like a password and be kept exceptionally securely, it is done via the web application's server rather than the client. If it is done on the client, it risks being exposed, and anyone with this token can access that user's information. Finally, a set of bank accounts can be embedded within the access tokens, and a user may have several associated access tokens.
+\subsubsection{Public Tokens}
+Secondly there are public tokens. These are what the link widget returns to the web application after the user has authenticated with their bank. They are unique to that user and are not treated like passwords, as they are valid for only 30 minutes and cannot be used to access a user's private information directly. In addition, they must be exchanged for an access token, the third type of token.
+
+\subsubsection{Access Tokens}
+Finally there are access tokens. Exchanging the public token for an access token is done via a Plaid endpoint. However, because the access token must be treated like a password and be kept exceptionally secure, it is done via the web application's server rather than the client. If it is done on the client, it risks being exposed, and anyone with this token can access that user's information. Finally, a set of bank accounts can be embedded within the access tokens, and a user may have several associated access tokens.
 
 \subsection{Plaid Authentication Flow}
 \label{sec:plaid-authentication-flow}
@@ -108,19 +115,25 @@ This flow can be seen as a sequence diagram in the figure below (\ref{fig:plaid_
 
 \subsection{Operation Modes}
 \label{sec:plaid-operation-modes}
-Further aspects of Plaid relevant to this project include the different modes of operation. When the web application queries Plaid's endpoints, one of three modes can be specified, each producing different results.
+Further aspects of Plaid relevant to this project include the different modes of operation. When the web application queries Plaid's endpoints, one of three modes can be specified, each producing different results:
 
-% \subsubsection{Sandbox Mode}
+\begin{enumerate}
+    \item Sandbox mode
+    \item Development mode
+    \item Production mode
+\end{enumerate}
+
+\subsubsection{Sandbox Mode}
 The first is sandbox mode which is the default. All the endpoints and request formats remain the same, but the responses are fake data generated by Plaid themselves. This mode helps test the web application without connecting to a bank, so do not worry about leaking any private information or getting fast and reliable responses.
 
-% \subsubsection{Development Mode}
+\subsubsection{Development Mode}
 The second is development mode, where the responses are real data. The entire authentication flow must be followed in this mode, and a user will log in to their bank. To gain access to this mode, it must be requested from Plaid, and they review the application to ensure it is secure and will not leak any information. Once given access, there is a limit of one-hundred user accounts connected to actual banks, so this had to be managed carefully.
 
-% \subsubsection{Production Mode}
+\subsubsection{Production Mode}
 The final mode is production mode. It is the same as development mode but with no limits. Further vetting is required to access this, and the queries now cost. For this project, only sandbox mode was initially used, and then following the completion of the prototype, development mode was requested and given for further testing and demonstrations.
 
 \section{Further Motivation}
 \label{sec:further-motivation}
-As previously mentioned, the primary motivation for this project came from the recent open banking movement, so using modern technology to help push the field. In addition, the currently limited services available were also a factor, as it was identified that there was a need for an application like this. Finally, the timing for this project is very appropriate as the UK government announced that there is a financial crisis currently going on, which they named the 'Cost of Living Crisis' \cite{CostOfLivingCrisisGov}.
+As previously mentioned, the primary motivation for this project came from the recent open banking movement, therefore using modern technology to help build new software. In addition, the currently limited services available were also a factor, as it was identified that there was a need for an application like this. Finally, the timing for this project is very appropriate as the UK government announced that there is a financial crisis currently going on, which they named the 'Cost of Living Crisis' \cite{CostOfLivingCrisisGov}.
 
 The Money and Pensions Service's recent report advised that people get a budget planner to help cope with the current times \cite{MaPS}. They are the government-sponsored financial guidance entity for the UK. The report helped concrete an objective for the web application to include budgeting features and would also help improve financial capability.
