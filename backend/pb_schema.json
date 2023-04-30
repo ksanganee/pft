@@ -1,0 +1,170 @@
+[
+  {
+    "id": "systemprofiles0",
+    "name": "profiles",
+    "system": true,
+    "listRule": "userId = @request.user.id",
+    "viewRule": "userId = @request.user.id",
+    "createRule": "userId = @request.user.id",
+    "updateRule": "userId = @request.user.id",
+    "deleteRule": null,
+    "schema": [
+      {
+        "id": "pbfielduser",
+        "name": "userId",
+        "type": "user",
+        "system": true,
+        "required": true,
+        "unique": true,
+        "options": {
+          "maxSelect": 1,
+          "cascadeDelete": true
+        }
+      },
+      {
+        "id": "pbfieldname",
+        "name": "name",
+        "type": "text",
+        "system": false,
+        "required": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "id": "pbfieldavatar",
+        "name": "avatar",
+        "type": "file",
+        "system": false,
+        "required": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "maxSize": 5242880,
+          "mimeTypes": [
+            "image/jpg",
+            "image/jpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/gif"
+          ],
+          "thumbs": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "xrex2uquz2klcws",
+    "name": "tokens",
+    "system": false,
+    "listRule": "",
+    "viewRule": null,
+    "createRule": "",
+    "updateRule": null,
+    "deleteRule": null,
+    "schema": [
+      {
+        "id": "x3rgh5wo",
+        "name": "user",
+        "type": "user",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "cascadeDelete": true
+        }
+      },
+      {
+        "id": "g9opxiyu",
+        "name": "token",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "nh9yb2ib30y3mdi",
+    "name": "investments",
+    "system": false,
+    "listRule": "",
+    "viewRule": null,
+    "createRule": "",
+    "updateRule": null,
+    "deleteRule": "",
+    "schema": [
+      {
+        "id": "vemv4zne",
+        "name": "user",
+        "type": "user",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "cascadeDelete": true
+        }
+      },
+      {
+        "id": "xjadsodu",
+        "name": "name",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "id": "2kcowfn3",
+        "name": "ticker",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "id": "vsq5kuae",
+        "name": "quantity",
+        "type": "number",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null
+        }
+      },
+      {
+        "id": "l5ymzsfo",
+        "name": "cost",
+        "type": "number",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null
+        }
+      }
+    ]
+  }
+]

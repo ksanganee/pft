@@ -16,6 +16,8 @@ The full repository can be found at https://github.com/ksanganee/pft
 	- Ensure pocketbase executable is in backend
 	- `cd backend`
 	- `./pocketbase serve`
+	- Navigate to the admin ui
+	- Import the schema from pb_schema.json
 3. Flask API
 	- Ensure libraries in requirements.txt are installed
 	- Ensure constants in model.py and app.py match
