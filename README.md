@@ -22,6 +22,6 @@ The full repository can be found at https://github.com/ksanganee/pft
 	- `python model.py`
 	- `flask run`
 
-Should now be able to access the website at http://localhost:5000
+Should now be able to access the website at http://localhost:3000
 
 *Some of the keys in the .env file require an account from Plaid (at https://plaid.com/docs/) and Financial Modelling Prep (at https://financialmodelingprep.com/developer/docs/)
