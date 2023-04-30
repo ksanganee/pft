@@ -21,6 +21,8 @@ The first category of applications is those that do not use open banking. Often,
 
 GNU Cash is a free and open-source desktop application that allows users to track their finances. However, the downsides include that it is not very user-friendly and requires considerable experience to be used effectively. Switch to Linux mentions that it is a ``great FOSS tool [...], but it can be complicated to set up'' \cite{GNUCashSwitchedToLinux}, as part of their tutorial on how to use it. The fact that there are several tutorials and little documentation demonstrates that the UI is difficult to use, which is made worse by looking outdated and complex (see figure \ref{fig:gnucash_ui} below).
 
+\vspace{2\baselineskip}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{images/gnucash.png}
@@ -50,13 +52,11 @@ Quicken utilises open banking effectively to work with many different bank accou
 Despite having some useful budgeting features, Quicken cannot perform budgeting prediction from patterns in expenditure. This feature also would help improve financial capability because it will help the user plan for future expenses and identify areas where they can save money.
 
 Overall, these paid applications have some aspects which would be helpful in the web application. However, they also are missing some basic ones, which would be more focused on improving financial literacy.
-
 \section{Open Banking}
 \label{sec:open-banking}
 Open banking is defined as ``APIs [that] enable third-party developers to build applications and services around the financial institution'' in this paper \cite{OpenBankingDefinition}. Therefore, the open banking movement is the recent pressure on banks to open their data to third-party developers. They do this by creating a set of endpoints, which developers can design websites to query, and will respond with accurate and live data.
 
 Each bank has its own set of endpoints, such that the authentication process and available information differ. Reading the documentation for each bank is time-consuming and not straightforward, yet learning how to interact with each bank's API is necessary to build an application that works with them all. This lack of standardisation is where Plaid \cite{Plaid} comes in.
-
 \section{Plaid}
 \label{sec:plaid}
 Plaid is a platform that effectively wraps all the endpoints provided by the individual banks and provides a single standardised set of REST API endpoints as URLs. Using Plaid allows a third-party application only to query Plaid and, in turn, can support all the banks that Plaid provides access to - over twelve-thousand institutions \cite{PlaidInstitutions}.
@@ -74,8 +74,7 @@ A strict authentication flow must be followed to use Plaid's endpoints because i
 The first are link tokens. Link is the widget's name and pop-up used to authenticate the user with their bank. To start this process requires a link token. These can be requested from Plaid's API and are valid for 4 hours, but are not tied to any user nor are they treated like passwords.
 
 \subsubsection{Public Tokens}
-Secondly there are public tokens. These are what the link widget returns to the web application after the user has authenticated with their bank. They are unique to that user and are not treated like passwords, as they are valid for only 30 minutes and cannot be used to access a user's private information directly. In addition, they must be exchanged for an access token, the third type of token.
-
+Secondly there are public tokens. These are what the link widget returns to the web application after the user has authenticated with their bank. They are unique to that user and are not treated like passwords, as they are valid for only 30 minutes and cannot be used to access a user's private information directly as must be exchanged for the third type of token.
 \subsubsection{Access Tokens}
 Finally there are access tokens. Exchanging the public token for an access token is done via a Plaid endpoint. However, because the access token must be treated like a password and be kept exceptionally secure, it is done via the web application's server rather than the client. If it is done on the client, it risks being exposed, and anyone with this token can access that user's information. Finally, a set of bank accounts can be embedded within the access tokens, and a user may have several associated access tokens.
 

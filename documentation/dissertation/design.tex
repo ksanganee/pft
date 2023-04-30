@@ -46,12 +46,16 @@ Despite this, the design process that was instead followed was first to give the
 \subsection{Authentication Pages}
 When a user first visits the site, they must create an account. Research into the limitations of other services showed that having a quick and seamless experience at this stage is vital for the user. This contrasts with applications such as Monzo and Revolut, where the signup process is long as they do not only sign up for the analytics but also create a bank account. The focus for this application is simplicity, so the design for these pages consist of simple input boxes and a function button to log in or create an account.
 
+\vspace{2\baselineskip}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\textwidth]{images/login_specification.png}
 	\caption{Login Page Design}
 	\label{fig:LoginPage}
 \end{figure}
+
+\vspace{\baselineskip}
 
 Above is the basic design for these pages. Most parts are self-explanatory; however, where it says ``(query)'' is where any message or response can be displayed to the user. Examples of these include ``you have successfully logged out'', ``that user does not exist'', or ``incorrect password''; and are given the relevant colours. In addition, the ``don't have an account?'' and ``login'' texts are modified appropriately for each page that it is on - for example, if instead, the user is creating an account, it says ``already have an account?'' and ``signup'' respectively.
 
@@ -84,6 +88,8 @@ The transactions strategy is the default strategy shown on the dashboard because
 From Plaid, the endpoint returns a list of transactions in reverse chronological order per account. Each transaction has an account\_id, amount, date, time, location, currency code, merchant name, category (and more) associated with it. The web application groups the transactions from all toggled accounts by their date and then displays each transaction in reverse chronological order.
 
 The transaction is displayed with the merchant name, category, amount and the bank logo of the account it is from. In addition, there is a separate label for each date above all the transactions for that date. Finally, a distinction between income and expenditure is made by colouring the whole transaction background light-green for income and light-red for expenditure.
+
+\vspace{\baselineskip}
 
 \begin{figure}[H]
 	\centering
@@ -182,6 +188,7 @@ Finally, the Python Flask API contains the budget prediction neural network. Thi
 \subsubsection{Budget Prediction Interaction}
 When the Budget prediction page is accessed, the frontend queries the Next.js endpoint. The Next.js endpoint first queries Plaid for the transactions, interacts with the database for the access token, and then queries the Python Flask API. The Python Flask API returns the prediction to the Next.js API, which returns it to the frontend to be displayed.
 
+\newpage
 \section{Endpoints}
 \label{sec:endpoints}
 Various Next.js API routes are required for each of the strategies that the web application exhibits. All of these routes are prefixed with ``/api'' to be accessed by the client, and all only accept requests using the HTTP POST method. This is because the requests often contain contextual information for the server to decide what to do; for example, they contain the user identifier to determine which user's transactions are being requested.
