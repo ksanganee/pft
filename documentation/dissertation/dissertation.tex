@@ -1,5 +1,6 @@
 \documentclass[a4paper,fleqn,12pt]{report}
-\setlength{\headheight}{14.5pt}
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{1.5cm}
 \addtolength{\topmargin}{-2.5pt}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -16,9 +17,9 @@
 \renewcommand{\headrulewidth}{0pt}
 
 \pagestyle{fancy}
-% \fancyhead[L]{\textit{\leftmark}}
-% \fancyhead[R]{\textit{\thepage}}
-\fancyhead[]{}
+\fancyhead[L]{\textit{\leftmark}}
+\fancyhead[R]{\textit{\thepage}}
+% \fancyhead[]{}
 \fancyfoot[]{}
 
 \assignpagestyle{\chapter}{fancy}
@@ -41,7 +42,7 @@
 \input{evaluation.tex}
 \input{conclusions.tex}
 
-\bibliographystyle{../common/plainnat}
+\bibliographystyle{unsrtnat}
 \bibliography{../common/bibliography}
 
 \end{document}
